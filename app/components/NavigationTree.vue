@@ -91,6 +91,9 @@ const expandActiveParents = (items, currentPath) => {
 
 // 滚动到激活的元素
 const scrollToActiveItem = () => {
+  // 只在客户端执行
+  if (!process.client) return;
+
   // 使用 setTimeout 确保 DOM 完全更新和路由过渡完成
   setTimeout(() => {
     const activeElement = document.querySelector('[data-active="true"]');
