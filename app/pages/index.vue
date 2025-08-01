@@ -18,11 +18,11 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div
           v-for="article in articles"
-          :key="article._path"
+          :key="article.path"
           class="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden"
         >
-          <div class="p-6">
-            <NuxtLink :to="article._path" class="block">
+          <NuxtLink :to="article.path" class="block">
+            <div class="p-6">
               <div
                 v-if="article.image"
                 class="aspect-video overflow-hidden rounded-lg mb-4"
@@ -42,18 +42,20 @@
               <h3 class="text-xl font-bold line-clamp-2">
                 {{ article.title }}
               </h3>
-            </NuxtLink>
 
-            <p class="text-gray-600 dark:text-gray-400 line-clamp-3 mb-4 mt-4">
-              {{ article.description || "暂无描述" }}
-            </p>
+              <p
+                class="text-gray-600 dark:text-gray-400 line-clamp-3 mb-4 mt-4"
+              >
+                {{ article.description || "暂无描述" }}
+              </p>
 
-            <div
-              class="flex justify-between items-center text-sm text-gray-500 mt-4"
-            >
-              <span>{{ formatDate(article.meta.date) }}</span>
+              <div
+                class="flex justify-between items-center text-sm text-gray-500 mt-4"
+              >
+                <span>{{ formatDate(article.meta.date) }}</span>
+              </div>
             </div>
-          </div>
+          </NuxtLink>
         </div>
       </div>
     </div>
@@ -80,6 +82,7 @@ const getFirstImageUrl = (content) => {
     // 递归搜索图片节点
     const findImage = (nodes) => {
       for (const node of nodes) {
+        // console.log(node)
         if (node[0] === "img") {
           return node[1].src; // 返回 HTML <img> 的 src
         }

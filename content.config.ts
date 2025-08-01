@@ -7,6 +7,8 @@ export default defineContentConfig({
       source: {
         include: "**/*.md",
         // exclude: ["index.md", "**/*.jpg", "**/*.jpeg", "**/*.png", "**/*.gif"],
+        repository: "https://github.com/vanderwals/demo1/tree/main",
+        // authToken: process.env.GITHUB_TOKEN,
       },
       schema: z.object({
         links: z
@@ -20,9 +22,6 @@ export default defineContentConfig({
           )
           .optional(),
       }),
-      preview: {
-        api: "https://api.nuxt.studio",
-      },
     }),
   },
 });

@@ -5,6 +5,9 @@ export default defineNuxtConfig({
 
   css: ["~/assets/css/main.css"],
 
+  devSource: {
+    cache: 10,
+  },
   modules: [
     "@nuxt/content",
     "@nuxt/eslint",
