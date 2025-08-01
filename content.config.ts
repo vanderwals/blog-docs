@@ -20,6 +20,9 @@ export default defineContentConfig({
           )
           .optional(),
       }),
+      preview: {
+        api: "https://api.nuxt.studio",
+      },
     }),
   },
 });
