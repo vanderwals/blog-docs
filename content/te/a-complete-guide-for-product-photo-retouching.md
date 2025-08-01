@@ -1,5 +1,5 @@
 ---
-title: "A Complete Guide for Product Photo Retouching"
+title: "AAAA Complete Guide for Product Photo Retouching"
 description: >-
   Here are some product photo retouching tips: 1) Improve Product Focus. 2)
   Don’t Avoid Classic Retouching. 3) Color Correction Create a Massive
