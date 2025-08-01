@@ -7,8 +7,8 @@ description: >-
 github_sync:
   source: "https://github.com/eztalksapp/sharkfoto-blog"
   original_path: "a-complete-guide-for-product-photo-retouching.md"
-  synced_at: "2025-07-31T10:24:34.791Z"
   branch: "1.0"
+date: "2025-07-31T10:24:34.791Z"
 ---
 
 <figure><img src="https://images.unsplash.com/photo-1638344851035-a7aad78d8daf?crop=entropy&#x26;cs=tinysrgb&#x26;fm=jpg&#x26;ixid=MnwxOTcwMjR8MHwxfHNlYXJjaHw2fHxwaG90byUyMHJldG91Y2hpbmd8ZW58MHx8fHwxNjczNjg0NzI5&#x26;ixlib=rb-4.0.3&#x26;q=80" alt="Tips for photo retouching"><figcaption><p>Tips for photo retouching</p></figcaption></figure>
