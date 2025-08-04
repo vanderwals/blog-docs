@@ -31,11 +31,16 @@ export default defineNuxtConfig({
         },
       },
     },
+    autoImport: true,
+    cache: false,
   },
 
   ui: {
-    icons: ["mdi", "heroicons"],
     // 禁用字体功能
     fonts: false,
+  },
+  devServer: {
+    host: "0.0.0.0",
+    port: 3000,
   },
 });
