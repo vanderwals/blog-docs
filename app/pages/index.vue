@@ -63,11 +63,11 @@
 </template>
 
 <script setup>
-// 获取最新的10篇文档
-const { data: allContent } = await useAsyncData("all-content", () =>
+// 获取全部文档
+const { data: allContent, pending } = await useAsyncData("all-content", () =>
   queryCollection("content").all()
 );
-const pending = false;
+console.log(allContent.value);
 
 const getFirstImageUrl = (content) => {
   // 如果 body 是字符串（原始 Markdown/HTML）
@@ -82,7 +82,6 @@ const getFirstImageUrl = (content) => {
     // 递归搜索图片节点
     const findImage = (nodes) => {
       for (const node of nodes) {
-        // console.log(node)
         if (node[0] === "img") {
           return node[1].src; // 返回 HTML <img> 的 src
         }
@@ -102,18 +101,30 @@ const getFirstImageUrl = (content) => {
   return null;
 };
 
+const DEFAULT_IMAGE_URL =
+  "https://dsoh77ye4qgrq.cloudfront.net/public/images/cover-default.webp";
+
 const articles = computed(() => {
   if (!allContent.value) return [];
 
   return [...allContent.value]
     .sort((a, b) => new Date(b.meta?.date) - new Date(a.meta?.date))
-    .slice(0, 6)
-    .map((article) => ({
-      ...article,
-      image: article.body
-        ? getFirstImageUrl(article.body)
-        : "https://cdn.sharkfoto.com/sharkfoto-logo.svg",
-    }));
+    .slice(0, 12)
+    .map((article) => {
+      // 封面图片
+      let imageUrl = null;
+      if (article.body) {
+        imageUrl = getFirstImageUrl(article.body);
+      }
+      // 如果没有图片，则使用默认图片
+      if (!imageUrl) {
+        imageUrl = DEFAULT_IMAGE_URL;
+      }
+      return {
+        ...article,
+        image: imageUrl,
+      };
+    });
 });
 
 // 日期格式化函数

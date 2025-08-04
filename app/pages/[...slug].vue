@@ -11,6 +11,26 @@ const { data: navigation } = await useAsyncData("navigation", () => {
 const { data: page } = await useAsyncData(route.path, () => {
   return queryCollection("content").path(route.path).first();
 });
+
+// 去除内容中的一级标题
+const processedPage = computed(() => {
+  if (!page.value) return null;
+
+  // 创建页面副本
+  const processed = { ...page.value };
+
+  // 处理 body 内容，去除一级标题
+  for (const node of processed.body.value) {
+    // console.log(node);
+    if (node[0] === "h1") {
+      // 删除该节点
+      processed.body.value.splice(node, 1);
+    }
+  }
+
+  return processed;
+});
+
 // console.log(page.value);
 // 获取上一篇和下一篇
 const { data: surroundings } = await useAsyncData("surroundings", () => {
@@ -18,8 +38,8 @@ const { data: surroundings } = await useAsyncData("surroundings", () => {
     fields: ["path", "title"],
   });
 });
-const prev = computed(() => surroundings.value?.prev);
-const next = computed(() => surroundings.value?.next);
+const prev = computed(() => surroundings.value?.[0]);
+const next = computed(() => surroundings.value?.[1]);
 
 // 日期格式化函数
 const formatDate = (dateString) => {
@@ -83,29 +103,63 @@ const formatDate = (dateString) => {
 
           <!-- 内容渲染 -->
           <div class="prose prose-gray dark:prose-invert max-w-none">
-            <ContentRenderer :value="page" v-if="page" />
+            <ContentRenderer :value="processedPage" v-if="processedPage" />
           </div>
 
           <template #footer>
-            <div
-              v-if="prev || next"
-              class="flex justify-between items-center pt-6 border-t"
-            >
-              <UButton
-                v-if="prev"
-                :to="prev.path"
-                :label="prev.title"
-                icon="i-heroicons-arrow-left"
-                variant="outline"
-              />
-              <div v-else></div>
-              <UButton
-                v-if="next"
-                :to="next.path"
-                :label="next.title"
-                trailing-icon="i-heroicons-arrow-right"
-                variant="outline"
-              />
+            <div v-if="prev || next" class="pt-6 border-t">
+              <div class="grid gap-4 sm:grid-cols-2">
+                <!-- 上一篇卡片 -->
+                <NuxtLink v-if="prev" :to="prev.path" class="block">
+                  <UCard
+                    class="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors h-full"
+                  >
+                    <div class="flex items-center space-x-3">
+                      <UIcon
+                        name="i-heroicons-arrow-left"
+                        class="flex-shrink-0"
+                      />
+                      <div class="min-w-0">
+                        <div class="text-sm text-gray-500 dark:text-gray-400">
+                          上一篇
+                        </div>
+                        <div
+                          class="font-medium text-gray-900 dark:text-white truncate"
+                        >
+                          {{ prev.title }}
+                        </div>
+                      </div>
+                    </div>
+                  </UCard>
+                </NuxtLink>
+
+                <!-- 占位符，当没有上一篇时 -->
+                <div v-else class="hidden sm:block"></div>
+
+                <!-- 下一篇卡片 -->
+                <NuxtLink v-if="next" :to="next.path" class="block">
+                  <UCard
+                    class="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors h-full"
+                  >
+                    <div class="flex items-center justify-between space-x-3">
+                      <div class="min-w-0 text-right sm:text-left">
+                        <div class="text-sm text-gray-500 dark:text-gray-400">
+                          下一篇
+                        </div>
+                        <div
+                          class="font-medium text-gray-900 dark:text-white truncate"
+                        >
+                          {{ next.title }}
+                        </div>
+                      </div>
+                      <UIcon
+                        name="i-heroicons-arrow-right"
+                        class="flex-shrink-0"
+                      />
+                    </div>
+                  </UCard>
+                </NuxtLink>
+              </div>
             </div>
           </template>
         </UCard>

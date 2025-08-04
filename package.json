@@ -24,6 +24,7 @@
     "eslint": "^9.32.0",
     "global-agent": "^3.0.0",
     "nuxt": "^4.0.1",
+    "nuxt-content-git": "^6.0.1",
     "tailwindcss": "^4.1.11",
     "typescript": "^5.8.3",
     "vue": "^3.5.18",
