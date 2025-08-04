@@ -4,9 +4,18 @@ export default defineContentConfig({
   // 添加/修改以下配置：
   nitro: {
     preset: "cloudflare_pages",
-    // 防止异常压缩包
-    minify: false,
-    sourceMap: true,
+    cloudflare: {
+      deployConfig: true,
+      wrangler: {
+        d1_databases: [
+          {
+            binding: "DB",
+            database_name: "db",
+            database_id: "38b4139f-37cf-4fa4-97f0-c6e994b6ba06",
+          },
+        ],
+      },
+    },
   },
   // 禁用图标远程加载
   icon: {

@@ -1,7 +1,7 @@
 export default defineAppConfig({
   // 网站基本信息
   site: {
-    name: "文档中心",
+    name: "文档中心123",
     title: "文档",
     description: "这里汇集了最新、最有价值的技术文档，助您快速掌握所需知识",
     logo: {
