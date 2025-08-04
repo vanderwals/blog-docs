@@ -1,6 +1,17 @@
 import { defineContentConfig, defineCollection, z } from "@nuxt/content";
 
 export default defineContentConfig({
+  // 添加/修改以下配置：
+  nitro: {
+    preset: "cloudflare_pages",
+    // 防止异常压缩包
+    minify: false,
+    sourceMap: true,
+  },
+  // 禁用图标远程加载
+  icon: {
+    mode: "local", // 强制使用本地图标资源
+  },
   collections: {
     content: defineCollection({
       type: "page",
