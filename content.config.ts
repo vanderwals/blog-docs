@@ -14,9 +14,9 @@ export default defineContentConfig({
           "**/*.png",
           "**/*.gif",
         ],
-        repository: "https://github.com/vanderwals/demo1/tree/main",
-        // repository: "https://github.com/eztalksapp/sharkfoto-blog/tree/1.0",
-        // authToken: process.env.GITHUB_TOKEN,
+        // repository: "https://github.com/vanderwals/demo1/tree/main",
+        repository: "https://github.com/eztalksapp/sharkfoto-blog/tree/1.0",
+        authToken: process.env.GITHUB_TOKEN,
       },
       schema: z.object({
         links: z

@@ -1,9 +1,11 @@
 <template>
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="text-center mb-12">
-      <h1 class="text-4xl font-bold mb-4">文档</h1>
+      <h1 class="text-4xl font-bold mb-4">
+        {{ appConfig.homepage.hero.title }}
+      </h1>
       <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-        这里汇集了最新、最有价值的技术文档，助您快速掌握所需知识
+        {{ appConfig.homepage.hero.subtitle }}
       </p>
     </div>
 
@@ -14,7 +16,9 @@
     </div>
 
     <div v-else>
-      <h2 class="text-2xl font-bold mb-6">最新文档</h2>
+      <h2 class="text-2xl font-bold mb-6">
+        {{ appConfig.homepage.sections.latest.title }}
+      </h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div
           v-for="article in articles"
@@ -63,6 +67,8 @@
 </template>
 
 <script setup>
+const appConfig = useAppConfig();
+
 // 获取全部文档
 const { data: allContent, pending } = await useAsyncData("all-content", () =>
   queryCollection("content").all()
@@ -109,7 +115,7 @@ const articles = computed(() => {
 
   return [...allContent.value]
     .sort((a, b) => new Date(b.meta?.date) - new Date(a.meta?.date))
-    .slice(0, 12)
+    .slice(0, appConfig.homepage.sections.latest.maxItems)
     .map((article) => {
       // 封面图片
       let imageUrl = null;

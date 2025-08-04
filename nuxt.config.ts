@@ -5,9 +5,6 @@ export default defineNuxtConfig({
 
   css: ["~/assets/css/main.css"],
 
-  devSource: {
-    cache: 10,
-  },
   modules: [
     "@nuxt/content",
     "nuxt-content-git",
@@ -17,24 +14,12 @@ export default defineNuxtConfig({
     "@nuxt/test-utils",
     "@nuxt/ui",
   ],
-  content: {
-    documentDriven: true,
-    highlight: {
-      theme: {
-        default: "github-light",
-        dark: "github-dark",
-      },
-    },
-    build: {
-      markdown: {
-        toc: {
-          searchDepth: 1,
-        },
-      },
-    },
-    autoImport: true,
-    cache: false,
+
+  colorMode: {
+    classSuffix: "",
   },
+
+  // Content module configuration will use defaults
 
   ui: {
     // 禁用字体功能

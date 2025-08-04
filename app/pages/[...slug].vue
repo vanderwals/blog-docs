@@ -38,6 +38,7 @@ const { data: surroundings } = await useAsyncData("surroundings", () => {
     fields: ["path", "title"],
   });
 });
+console.log(surroundings.value);
 const prev = computed(() => surroundings.value?.[0]);
 const next = computed(() => surroundings.value?.[1]);
 
