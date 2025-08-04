@@ -11,7 +11,7 @@ const { data: navigation } = await useAsyncData("navigation", () => {
 const { data: page } = await useAsyncData(route.path, () => {
   return queryCollection("content").path(route.path).first();
 });
-
+console.log(page.value);
 // 去除内容中的一级标题
 const processedPage = computed(() => {
   if (!page.value) return null;
@@ -33,12 +33,15 @@ const processedPage = computed(() => {
 
 // console.log(page.value);
 // 获取上一篇和下一篇
-const { data: surroundings } = await useAsyncData("surroundings", () => {
-  return queryCollectionItemSurroundings("content", route.path, {
-    fields: ["path", "title"],
-  });
-});
-console.log(surroundings.value);
+const { data: surroundings } = await useAsyncData(
+  `surround-${route.path}`,
+  () => {
+    return queryCollectionItemSurroundings("content", route.path, {
+      fields: ["path", "title"],
+    });
+  }
+);
+
 const prev = computed(() => surroundings.value?.[0]);
 const next = computed(() => surroundings.value?.[1]);
 
@@ -89,16 +92,55 @@ const formatDate = (dateString) => {
             >
               {{ page.description }}
             </div>
-            <div class="mt-4 flex items-center text-sm text-gray-500">
-              <span v-if="page.date"
-                >最后更新: {{ formatDate(page.date) }}</span
-              >
-              <span v-if="page.date && page.readingTime?.text" class="mx-2"
+            <div
+              class="mt-4 flex flex-col sm:flex-row sm:items-center text-sm text-gray-500 gap-2"
+            >
+              <!-- Git提取的时间信息 -->
+              <div class="flex items-center flex-wrap gap-2">
+                <span v-if="page.createdAt" class="flex items-center">
+                  <Icon
+                    name="i-heroicons-calendar-20-solid"
+                    class="w-4 h-4 mr-1"
+                  />
+                  创建: {{ formatDate(page.createdAt) }}
+                </span>
+                <span v-if="page.createdAt && page.updatedAt" class="mx-2"
+                  >•</span
+                >
+                <span v-if="page.updatedAt" class="flex items-center">
+                  <Icon
+                    name="i-heroicons-clock-20-solid"
+                    class="w-4 h-4 mr-1"
+                  />
+                  更新: {{ formatDate(page.updatedAt) }}
+                </span>
+                <!-- 备用方案：显示frontmatter中的date字段 -->
+                <span
+                  v-if="!page.createdAt && !page.updatedAt && page.date"
+                  class="flex items-center"
+                >
+                  <Icon
+                    name="i-heroicons-clock-20-solid"
+                    class="w-4 h-4 mr-1"
+                  />
+                  最后更新: {{ formatDate(page.date) }}
+                </span>
+              </div>
+              <span
+                v-if="
+                  (page.createdAt || page.updatedAt || page.date) &&
+                  page.readingTime?.text
+                "
+                class="mx-2 hidden sm:inline"
                 >•</span
               >
-              <span v-if="page.readingTime?.text">{{
-                page.readingTime.text
-              }}</span>
+              <span v-if="page.readingTime?.text" class="flex items-center">
+                <Icon
+                  name="i-heroicons-book-open-20-solid"
+                  class="w-4 h-4 mr-1"
+                />
+                {{ page.readingTime.text }}
+              </span>
             </div>
           </template>
 

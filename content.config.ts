@@ -1,44 +1,18 @@
 import { defineContentConfig, defineCollection, z } from "@nuxt/content";
 
 export default defineContentConfig({
-  // 添加/修改以下配置：
-  nitro: {
-    preset: "cloudflare_pages",
-    cloudflare: {
-      deployConfig: true,
-      wrangler: {
-        d1_databases: [
-          {
-            binding: "DB",
-            database_name: "db",
-            database_id: "38b4139f-37cf-4fa4-97f0-c6e994b6ba06",
-          },
-        ],
-      },
-    },
-  },
-  // 禁用图标远程加载
-  icon: {
-    mode: "local", // 强制使用本地图标资源
-  },
   collections: {
     content: defineCollection({
       type: "page",
       source: {
         include: "**/*.md",
-        exclude: [
-          "README.md",
-          "SUMMARY.md",
-          "**/*.jpg",
-          "**/*.jpeg",
-          "**/*.png",
-          "**/*.gif",
-        ],
+        exclude: ["README.md", "SUMMARY.md"],
         // repository: "https://github.com/vanderwals/demo1/tree/main",
         repository: "https://github.com/eztalksapp/sharkfoto-blog/tree/1.0",
         authToken: process.env.GITHUB_TOKEN,
       },
       schema: z.object({
+        readingTime: z.number().optional(),
         links: z
           .array(
             z.object({
@@ -58,8 +32,9 @@ export default defineContentConfig({
             })
           )
           .optional(),
-        createdAt: z.date().optional(),
-        updatedAt: z.date().optional(),
+        // Git时间戳字段
+        createdAt: z.date().optional(), // 文件首次提交时间
+        updatedAt: z.date().optional(), // 文件最后修改时间
       }),
     }),
   },

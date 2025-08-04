@@ -56,7 +56,7 @@
               <div
                 class="flex justify-between items-center text-sm text-gray-500 mt-4"
               >
-                <span>{{ formatDate(article.meta.date) }}</span>
+                <span>{{ formatDate(article.createdAt) }}</span>
               </div>
             </div>
           </NuxtLink>
