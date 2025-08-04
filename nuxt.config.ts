@@ -43,9 +43,9 @@ export default defineNuxtConfig({
             "./app/utils/githubFileTimes"
           );
           const cache = await fetchRepoFileTimes({
-            owner: "eztalksapp",
-            repo: "sharkfoto-blog",
-            branch: "1.0",
+            owner: process.env.GITHUB_REPO_OWNER || "",
+            repo: process.env.GITHUB_REPO_NAME || "",
+            branch: process.env.GITHUB_REPO_BRANCH || "",
             token: process.env.GITHUB_TOKEN,
           });
 

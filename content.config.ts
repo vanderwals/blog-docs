@@ -8,7 +8,7 @@ export default defineContentConfig({
         include: "**/*.md",
         exclude: ["README.md", "SUMMARY.md"],
         // repository: "https://github.com/vanderwals/demo1/tree/main",
-        repository: "https://github.com/eztalksapp/sharkfoto-blog/tree/1.0",
+        repository: `https://github.com/${process.env.GITHUB_REPO_OWNER}/${process.env.GITHUB_REPO_NAME}/tree/${process.env.GITHUB_REPO_BRANCH}`,
         authToken: process.env.GITHUB_TOKEN,
       },
       schema: z.object({
