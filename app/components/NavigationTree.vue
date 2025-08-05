@@ -1,14 +1,15 @@
 <template>
   <div>
     <!-- 搜索框 - 只在最顶层显示 -->
-    <UInput
+    <!-- <UInput
       v-if="showSearch"
       v-model="localSearchTerm"
       placeholder="搜索文档..."
       icon="i-heroicons-magnifying-glass"
       size="md"
       class="mb-4 w-full"
-    />
+    /> -->
+    <MiniSearchExample v-if="showSearch" />
 
     <ul class="space-y-1">
       <li v-for="item in filteredItems" :key="item.path">

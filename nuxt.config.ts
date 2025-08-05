@@ -11,7 +11,6 @@ export default defineNuxtConfig({
 
   modules: [
     "@nuxt/content",
-    "nuxt-content-git",
     "@nuxt/eslint",
     "@nuxt/image",
     "@nuxt/scripts",

@@ -142,7 +142,7 @@ onMounted(() => {
     <div class="flex flex-col lg:flex-row">
       <!-- 桌面端左侧导航栏 -->
       <aside
-        class="hidden lg:block lg:w-64 flex-shrink-0 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto lg:py-8"
+        class="hidden lg:block lg:w-64 flex-shrink-0 lg:sticky lg:top-20 lg:h-screen lg:overflow-y-auto"
       >
         <div class="space-y-6">
           <!-- 文档树导航 -->

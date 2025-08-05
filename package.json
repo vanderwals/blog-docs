@@ -5,7 +5,8 @@
   "scripts": {
     "build": "nuxt build --preset=cloudflare_pages",
     "dev-old": "(if exist .nuxt rd /s /q .nuxt) & (if exist .data rd /s /q .data) & nuxt dev",
-    "dev": "(if exist .data rd /s /q .data) & nuxt dev",
+    "_dev": "(if exist .data rd /s /q .data) & nuxt dev",
+    "dev": "cls & nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
@@ -24,6 +25,7 @@
     "better-sqlite3": "^12.2.0",
     "eslint": "^9.32.0",
     "global-agent": "^3.0.0",
+    "minisearch": "^7.1.2",
     "nuxt": "^4.0.1",
     "nuxt-content-git": "^6.0.1",
     "tailwindcss": "^4.1.11",
