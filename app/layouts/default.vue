@@ -37,7 +37,8 @@
                 appConfig.navigation.links && appConfig.navigation.links.length
               "
             >
-              <ul class="flex space-x-4 mr-4">
+              <!-- 桌面端显示所有链接 -->
+              <ul class="hidden md:flex space-x-4 mr-4">
                 <li v-for="link in appConfig.navigation.links" :key="link.name">
                   <a
                     :href="link.url"
@@ -49,6 +50,65 @@
                   </a>
                 </li>
               </ul>
+
+              <!-- 移动端显示第一个链接和下拉菜单 -->
+              <div class="md:hidden flex items-center mr-4">
+                <!-- 显示第一个链接 -->
+                <a
+                  v-if="appConfig.navigation.links[0]"
+                  :href="appConfig.navigation.links[0].url"
+                  class="text-gray-700 dark:text-gray-200 hover:underline mr-2"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {{ appConfig.navigation.links[0].name }}
+                </a>
+
+                <!-- 下拉菜单按钮 -->
+                <div
+                  v-if="appConfig.navigation.links.length > 1"
+                  class="relative"
+                >
+                  <button
+                    @click="toggleDropdown"
+                    class="text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white focus:outline-none"
+                  >
+                    <svg
+                      class="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 9l-7 7-7-7"
+                      ></path>
+                    </svg>
+                  </button>
+
+                  <!-- 下拉菜单 -->
+                  <div
+                    v-if="isDropdownOpen"
+                    class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-50 border border-gray-200 dark:border-gray-700"
+                  >
+                    <a
+                      v-for="(link, index) in appConfig.navigation.links.slice(
+                        1
+                      )"
+                      :key="link.name"
+                      :href="link.url"
+                      class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      @click="closeDropdown"
+                    >
+                      {{ link.name }}
+                    </a>
+                  </div>
+                </div>
+              </div>
             </template>
             <ClientOnly>
               <ColorModeButton v-if="appConfig.navigation.showColorMode" />
@@ -138,4 +198,31 @@
 
 <script setup>
 const appConfig = useAppConfig();
+
+// 下拉菜单状态
+const isDropdownOpen = ref(false);
+
+// 切换下拉菜单
+const toggleDropdown = () => {
+  isDropdownOpen.value = !isDropdownOpen.value;
+};
+
+// 关闭下拉菜单
+const closeDropdown = () => {
+  isDropdownOpen.value = false;
+};
+
+// 点击外部关闭下拉菜单
+onMounted(() => {
+  document.addEventListener("click", (event) => {
+    const dropdown = document.querySelector(".relative");
+    if (dropdown && !dropdown.contains(event.target)) {
+      isDropdownOpen.value = false;
+    }
+  });
+});
+
+onUnmounted(() => {
+  document.removeEventListener("click", closeDropdown);
+});
 </script>
