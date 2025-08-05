@@ -1,6 +1,5 @@
 <script setup>
 const route = useRoute();
-const searchTerm = ref("");
 const isMobileNavOpen = ref(false);
 
 // 获取主题配置
@@ -126,20 +125,16 @@ onMounted(() => {
       :class="{ active: isMobileNavOpen }"
     >
       <div class="space-y-6">
-        <!-- 搜索框 -->
-        <UInput
-          v-model="searchTerm"
-          placeholder="搜索文档..."
-          icon="i-heroicons-magnifying-glass"
-          size="md"
-          class="mb-6"
-        />
         <!-- 文档树导航 -->
         <div
           class="rounded-lg bg-white dark:bg-gray-900 p-4 max-h-[calc(100vh-150px)] overflow-y-auto navigation-container"
           data-scrollable="navigation"
         >
-          <NavigationTree :items="navigation" nav-type="mobile" />
+          <NavigationTree
+            :items="navigation"
+            nav-type="mobile"
+            :show-search="true"
+          />
         </div>
       </div>
     </aside>
@@ -150,14 +145,6 @@ onMounted(() => {
         class="hidden lg:block lg:w-64 flex-shrink-0 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto lg:py-8"
       >
         <div class="space-y-6">
-          <!-- 搜索框 -->
-          <UInput
-            v-model="searchTerm"
-            placeholder="搜索文档..."
-            icon="i-heroicons-magnifying-glass"
-            size="md"
-            class="mb-6"
-          />
           <!-- 文档树导航 -->
           <div
             class="rounded-lg bg-white dark:bg-gray-900 p-4 max-h-[calc(100vh-150px)] overflow-y-auto navigation-container"

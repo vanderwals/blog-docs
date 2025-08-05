@@ -1,62 +1,76 @@
 <template>
-  <ul class="space-y-1">
-    <li v-for="item in items" :key="item.path">
-      <!-- 有子项目的文件夹：整行可点击来展开/折叠 -->
-      <div
-        v-if="item.children && item.children.length > 0"
-        class="flex items-center cursor-pointer"
-        @click="toggleCollapse(item.path)"
-      >
+  <div>
+    <!-- 搜索框 - 只在最顶层显示 -->
+    <UInput
+      v-if="showSearch"
+      v-model="localSearchTerm"
+      placeholder="搜索文档..."
+      icon="i-heroicons-magnifying-glass"
+      size="md"
+      class="mb-4 w-full"
+    />
+
+    <ul class="space-y-1">
+      <li v-for="item in filteredItems" :key="item.path">
+        <!-- 有子项目的文件夹：整行可点击来展开/折叠 -->
         <div
-          :data-active="isActive(item.path) ? 'true' : undefined"
-          :data-nav-type="navType"
-          class="flex-1 px-3 py-2 rounded-md transition-colors flex items-center"
-          :class="{
-            'navigation-active': isActive(item.path),
-            'hover:bg-gray-100 dark:hover:bg-gray-800': !isActive(item.path),
-          }"
+          v-if="item.children && item.children.length > 0"
+          class="flex items-center cursor-pointer"
+          @click="toggleCollapse(item.path)"
         >
-          <Icon
-            :name="
-              collapsedItems.has(item.path)
-                ? 'i-heroicons-chevron-right'
-                : 'i-heroicons-chevron-down'
-            "
-            class="w-4 h-4 mr-2 flex-shrink-0"
-          />
-          <span class="truncate">{{ item.title }}</span>
+          <div
+            :data-active="isActive(item.path) ? 'true' : undefined"
+            :data-nav-type="navType"
+            class="flex-1 px-3 py-2 rounded-md transition-colors flex items-center"
+            :class="{
+              'navigation-active': isActive(item.path),
+              'hover:bg-gray-100 dark:hover:bg-gray-800': !isActive(item.path),
+            }"
+          >
+            <Icon
+              :name="
+                collapsedItems.has(item.path)
+                  ? 'i-heroicons-chevron-right'
+                  : 'i-heroicons-chevron-down'
+              "
+              class="w-4 h-4 mr-2 flex-shrink-0"
+            />
+            <span class="truncate">{{ item.title }}</span>
+          </div>
         </div>
-      </div>
 
-      <!-- 没有子项目的叶子节点：可以点击导航 -->
-      <div v-else class="flex items-center">
-        <NuxtLink
-          :data-active="isActive(item.path) ? 'true' : undefined"
-          :data-nav-type="navType"
-          :to="item.path"
-          class="flex-1 px-3 py-2 rounded-md transition-colors block truncate"
-          :class="{
-            'navigation-active': isActive(item.path),
-            'hover:bg-gray-100 dark:hover:bg-gray-800': !isActive(item.path),
-          }"
+        <!-- 没有子项目的叶子节点：可以点击导航 -->
+        <div v-else class="flex items-center">
+          <NuxtLink
+            :data-active="isActive(item.path) ? 'true' : undefined"
+            :data-nav-type="navType"
+            :to="item.path"
+            class="flex-1 px-3 py-2 rounded-md transition-colors block truncate"
+            :class="{
+              'navigation-active': isActive(item.path),
+              'hover:bg-gray-100 dark:hover:bg-gray-800': !isActive(item.path),
+            }"
+          >
+            {{ item.title }}
+          </NuxtLink>
+        </div>
+
+        <!-- 子项目容器 -->
+        <div
+          v-if="item.children && item.children.length > 0"
+          :class="{ hidden: collapsedItems.has(item.path) }"
         >
-          {{ item.title }}
-        </NuxtLink>
-      </div>
-
-      <!-- 子项目容器 -->
-      <div
-        v-if="item.children && item.children.length > 0"
-        :class="{ hidden: collapsedItems.has(item.path) }"
-      >
-        <NavigationTree
-          :items="item.children"
-          :nav-type="navType"
-          class="ml-4 mt-1"
-        />
-      </div>
-    </li>
-  </ul>
+          <NavigationTree
+            :items="item.children"
+            :nav-type="navType"
+            :show-search="false"
+            :search-term="effectiveSearchTerm"
+            class="ml-4 mt-1"
+          />
+        </div>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script setup>
@@ -69,14 +83,64 @@ const props = defineProps({
     type: String,
     default: "desktop", // 'desktop' 或 'mobile'
   },
+  showSearch: {
+    type: Boolean,
+    default: true, // 默认显示搜索框
+  },
+  searchTerm: {
+    type: String,
+    default: "", // 从父组件传递的搜索词
+  },
 });
 
 const route = useRoute();
 const collapsedItems = ref(new Set());
+const localSearchTerm = ref("");
+
+// 使用父组件传递的搜索词或本地搜索词
+const effectiveSearchTerm = computed(() => {
+  return props.searchTerm || localSearchTerm.value;
+});
 
 // 获取主题配置
 const config = useAppConfig();
 const theme = computed(() => config.theme);
+
+// 过滤项目函数
+const filterItems = (items, term) => {
+  if (!term) return items;
+
+  return items
+    .filter((item) => {
+      // 检查当前项目是否匹配
+      const currentMatches = item.title
+        .toLowerCase()
+        .includes(term.toLowerCase());
+
+      // 检查子项目是否匹配
+      let childrenMatch = false;
+      if (item.children && item.children.length > 0) {
+        const filteredChildren = filterItems(item.children, term);
+        childrenMatch = filteredChildren.length > 0;
+      }
+
+      return currentMatches || childrenMatch;
+    })
+    .map((item) => {
+      if (item.children && item.children.length > 0) {
+        return {
+          ...item,
+          children: filterItems(item.children, term),
+        };
+      }
+      return item;
+    });
+};
+
+// 计算过滤后的项目
+const filteredItems = computed(() => {
+  return filterItems(props.items, effectiveSearchTerm.value);
+});
 
 const isActive = (path) => {
   return route.path.startsWith(path);
