@@ -114,7 +114,7 @@ const articles = computed(() => {
   if (!allContent.value) return [];
 
   return [...allContent.value]
-    .sort((a, b) => new Date(b.meta?.date) - new Date(a.meta?.date))
+    .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
     .slice(0, appConfig.homepage.sections.latest.maxItems)
     .map((article) => {
       // 封面图片

@@ -7,6 +7,7 @@ export default {
     "./plugins/**/*.{js,ts}",
     "./app.vue",
     "./error.vue",
+    "./app/**/*.vue",
   ],
   darkMode: "class",
   theme: {

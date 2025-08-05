@@ -1,6 +1,7 @@
 <script setup>
 const route = useRoute();
 const searchTerm = ref("");
+const isMobileNavOpen = ref(false);
 
 // 获取导航树
 const { data: navigation } = await useAsyncData("navigation", () => {
@@ -52,16 +53,97 @@ const formatDate = (dateString) => {
     year: "numeric",
     month: "long",
     day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
   });
 };
+
+// 切换移动端导航
+const toggleMobileNav = () => {
+  isMobileNavOpen.value = !isMobileNavOpen.value;
+};
+
+// 关闭移动端导航
+const closeMobileNav = () => {
+  isMobileNavOpen.value = false;
+};
+
+// 监听路由变化，自动关闭移动端导航
+watch(
+  () => route.path,
+  () => {
+    if (isMobileNavOpen.value) {
+      closeMobileNav();
+    }
+  }
+);
+
+// 监听ESC键关闭导航
+onMounted(() => {
+  const handleEsc = (e) => {
+    if (e.key === "Escape" && isMobileNavOpen.value) {
+      closeMobileNav();
+    }
+  };
+
+  document.addEventListener("keydown", handleEsc);
+
+  onUnmounted(() => {
+    document.removeEventListener("keydown", handleEsc);
+  });
+});
 </script>
 
 <template>
   <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- 移动端导航按钮 -->
+    <button
+      @click="toggleMobileNav"
+      class="mobile-nav-toggle lg:hidden"
+      :aria-label="isMobileNavOpen ? '关闭导航' : '打开导航'"
+    >
+      <Icon
+        :name="isMobileNavOpen ? 'i-heroicons-x-mark' : 'i-heroicons-bars-3'"
+        class="mobile-nav-toggle-icon"
+      />
+    </button>
+
+    <!-- 移动端导航遮罩 -->
+    <div
+      class="mobile-nav-overlay lg:hidden"
+      :class="{ active: isMobileNavOpen }"
+      @click="closeMobileNav"
+    ></div>
+
+    <!-- 移动端侧边栏 -->
+    <aside
+      class="mobile-nav-sidebar lg:hidden"
+      :class="{ active: isMobileNavOpen }"
+    >
+      <div class="space-y-6">
+        <!-- 搜索框 -->
+        <UInput
+          v-model="searchTerm"
+          placeholder="搜索文档..."
+          icon="i-heroicons-magnifying-glass"
+          size="md"
+          class="mb-6"
+        />
+        <!-- 文档树导航 -->
+        <div
+          class="rounded-lg bg-white dark:bg-gray-900 p-4 max-h-[calc(100vh-150px)] overflow-y-auto navigation-container"
+          data-scrollable="navigation"
+        >
+          <NavigationTree :items="navigation" nav-type="mobile" />
+        </div>
+      </div>
+    </aside>
+
     <div class="flex flex-col lg:flex-row">
-      <!-- 左侧导航栏 -->
+      <!-- 桌面端左侧导航栏 -->
       <aside
-        class="lg:w-64 flex-shrink-0 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto lg:py-8"
+        class="hidden lg:block lg:w-64 flex-shrink-0 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto lg:py-8"
       >
         <div class="space-y-6">
           <!-- 搜索框 -->
@@ -74,15 +156,15 @@ const formatDate = (dateString) => {
           />
           <!-- 文档树导航 -->
           <div
-            class="rounded-lg bg-white dark:bg-gray-900 p-4 max-h-[calc(100vh-150px)] overflow-y-auto"
+            class="rounded-lg bg-white dark:bg-gray-900 p-4 max-h-[calc(100vh-150px)] overflow-y-auto navigation-container"
             data-scrollable="navigation"
           >
-            <NavigationTree :items="navigation" />
+            <NavigationTree :items="navigation" nav-type="desktop" />
           </div>
         </div>
       </aside>
       <!-- 右侧内容区 -->
-      <main class="flex-grow min-w-0 lg:pl-8 py-8">
+      <main class="flex-grow min-w-0 lg:pl-8 py-8 mobile-content">
         <UCard v-if="page" class="w-full">
           <template #header>
             <h1 class="text-3xl font-bold">{{ page.title }}</h1>
@@ -151,23 +233,25 @@ const formatDate = (dateString) => {
 
           <template #footer>
             <div v-if="prev || next" class="pt-6 border-t">
-              <div class="grid gap-4 sm:grid-cols-2">
+              <div class="flex flex-col gap-3 sm:grid sm:grid-cols-2 sm:gap-4">
                 <!-- 上一篇卡片 -->
                 <NuxtLink v-if="prev" :to="prev.path" class="block">
                   <UCard
                     class="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors h-full"
                   >
-                    <div class="flex items-center space-x-3">
+                    <div class="flex items-center space-x-2 sm:space-x-3">
                       <UIcon
                         name="i-heroicons-arrow-left"
-                        class="flex-shrink-0"
+                        class="flex-shrink-0 w-4 h-4 sm:w-5 sm:h-5"
                       />
-                      <div class="min-w-0">
-                        <div class="text-sm text-gray-500 dark:text-gray-400">
+                      <div class="min-w-0 flex-1">
+                        <div
+                          class="text-xs sm:text-sm text-gray-500 dark:text-gray-400"
+                        >
                           上一篇
                         </div>
                         <div
-                          class="font-medium text-gray-900 dark:text-white truncate"
+                          class="text-sm sm:text-base font-medium text-gray-900 dark:text-white truncate"
                         >
                           {{ prev.title }}
                         </div>
@@ -184,20 +268,24 @@ const formatDate = (dateString) => {
                   <UCard
                     class="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors h-full"
                   >
-                    <div class="flex items-center justify-between space-x-3">
-                      <div class="min-w-0 text-right sm:text-left">
-                        <div class="text-sm text-gray-500 dark:text-gray-400">
+                    <div
+                      class="flex items-center justify-between space-x-2 sm:space-x-3"
+                    >
+                      <div class="min-w-0 flex-1 text-right sm:text-left">
+                        <div
+                          class="text-xs sm:text-sm text-gray-500 dark:text-gray-400"
+                        >
                           下一篇
                         </div>
                         <div
-                          class="font-medium text-gray-900 dark:text-white truncate"
+                          class="text-sm sm:text-base font-medium text-gray-900 dark:text-white truncate"
                         >
                           {{ next.title }}
                         </div>
                       </div>
                       <UIcon
                         name="i-heroicons-arrow-right"
-                        class="flex-shrink-0"
+                        class="flex-shrink-0 w-4 h-4 sm:w-5 sm:h-5"
                       />
                     </div>
                   </UCard>

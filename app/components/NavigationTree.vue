@@ -9,6 +9,7 @@
       >
         <div
           :data-active="isActive(item.path) ? 'true' : undefined"
+          :data-nav-type="navType"
           class="flex-1 px-3 py-2 rounded-md transition-colors flex items-center"
           :class="{
             'bg-gray-50 dark:bg-gray-800 font-medium': isActive(item.path),
@@ -31,6 +32,7 @@
       <div v-else class="flex items-center">
         <NuxtLink
           :data-active="isActive(item.path) ? 'true' : undefined"
+          :data-nav-type="navType"
           :to="item.path"
           class="flex-1 px-3 py-2 rounded-md transition-colors block truncate"
           :class="{
@@ -47,7 +49,11 @@
         v-if="item.children && item.children.length > 0"
         :class="{ hidden: collapsedItems.has(item.path) }"
       >
-        <NavigationTree :items="item.children" class="ml-4 mt-1" />
+        <NavigationTree
+          :items="item.children"
+          :nav-type="navType"
+          class="ml-4 mt-1"
+        />
       </div>
     </li>
   </ul>
@@ -59,8 +65,11 @@ const props = defineProps({
     type: Array,
     required: true,
   },
+  navType: {
+    type: String,
+    default: "desktop", // 'desktop' 或 'mobile'
+  },
 });
-
 const route = useRoute();
 const collapsedItems = ref(new Set());
 
@@ -96,7 +105,10 @@ const scrollToActiveItem = () => {
 
   // 使用 setTimeout 确保 DOM 完全更新和路由过渡完成
   setTimeout(() => {
-    const activeElement = document.querySelector('[data-active="true"]');
+    // 根据导航类型选择对应的激活元素
+    const activeElement = document.querySelector(
+      `[data-active="true"][data-nav-type="${props.navType}"]`
+    );
     if (activeElement) {
       // 找到可滚动的父容器
       const scrollableParent = activeElement.closest(
