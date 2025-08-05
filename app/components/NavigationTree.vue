@@ -12,7 +12,7 @@
           :data-nav-type="navType"
           class="flex-1 px-3 py-2 rounded-md transition-colors flex items-center"
           :class="{
-            'bg-gray-50 dark:bg-gray-800 font-medium': isActive(item.path),
+            'navigation-active': isActive(item.path),
             'hover:bg-gray-100 dark:hover:bg-gray-800': !isActive(item.path),
           }"
         >
@@ -36,7 +36,7 @@
           :to="item.path"
           class="flex-1 px-3 py-2 rounded-md transition-colors block truncate"
           :class="{
-            'bg-gray-50 dark:bg-gray-800 font-medium': isActive(item.path),
+            'navigation-active': isActive(item.path),
             'hover:bg-gray-100 dark:hover:bg-gray-800': !isActive(item.path),
           }"
         >
@@ -70,8 +70,13 @@ const props = defineProps({
     default: "desktop", // 'desktop' 或 'mobile'
   },
 });
+
 const route = useRoute();
 const collapsedItems = ref(new Set());
+
+// 获取主题配置
+const config = useAppConfig();
+const theme = computed(() => config.theme);
 
 const isActive = (path) => {
   return route.path.startsWith(path);
@@ -168,3 +173,14 @@ onMounted(() => {
   scrollToActiveItem();
 });
 </script>
+
+<style scoped>
+.navigation-active {
+  background-color: v-bind("theme.navigationActive") !important;
+  font-weight: 500;
+}
+
+.dark .navigation-active {
+  background-color: v-bind("theme.navigationActiveDark") !important;
+}
+</style>

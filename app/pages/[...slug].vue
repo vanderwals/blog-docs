@@ -3,6 +3,10 @@ const route = useRoute();
 const searchTerm = ref("");
 const isMobileNavOpen = ref(false);
 
+// 获取主题配置
+const config = useAppConfig();
+const theme = computed(() => config.theme);
+
 // 获取导航树
 const { data: navigation } = await useAsyncData("navigation", () => {
   return queryCollectionNavigation("content");
@@ -227,7 +231,9 @@ onMounted(() => {
           </template>
 
           <!-- 内容渲染 -->
-          <div class="prose prose-gray dark:prose-invert max-w-none">
+          <div
+            class="prose prose-gray dark:prose-invert max-w-none custom-prose"
+          >
             <ContentRenderer :value="processedPage" v-if="processedPage" />
           </div>
 
@@ -298,3 +304,20 @@ onMounted(() => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.custom-prose :deep(a) {
+  color: v-bind("theme.primary");
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.custom-prose :deep(a:hover) {
+  color: v-bind("theme.primary");
+  text-decoration: underline;
+}
+
+.custom-prose :deep(a:visited) {
+  color: v-bind("theme.primary");
+}
+</style>

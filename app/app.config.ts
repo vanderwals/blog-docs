@@ -16,6 +16,13 @@ export default defineAppConfig({
     url: "https://your-domain.com", // 请替换为实际域名
   },
 
+  // 主题色配置
+  theme: {
+    primary: "#8B5CF6", // 紫色
+    navigationActive: "#EDE9FE", // 浅紫色
+    navigationActiveDark: "#5B21B6", // 深紫色
+  },
+
   // 主页配置
   homepage: {
     hero: {
