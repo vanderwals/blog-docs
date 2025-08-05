@@ -42,6 +42,15 @@ export default defineAppConfig({
   navigation: {
     showSearch: false, // 未来可能添加搜索功能
     showColorMode: true,
+    links: [
+      { name: "Products", url: "https://sharkfoto.com/" },
+      {
+        name: "Image Converter",
+        url: "https://sharkfoto.com/image-converter/",
+      },
+      { name: "Pricing", url: "https://sharkfoto.com/pricing" },
+      { name: "Company", url: "https://sharkfoto.com/company" },
+    ],
   },
 
   // 社交媒体链接（可选）
@@ -56,5 +65,107 @@ export default defineAppConfig({
     darkMode: true,
     analytics: false, // 是否启用分析
     comments: false, // 是否启用评论
+  },
+
+  // 底部配置
+  footer: {
+    slogan: "AI Make Photo Editing Different",
+    logo: {
+      src: "https://cdn.sharkfoto.com/sharkfoto_logo_white.svg",
+      width: 162.5,
+      height: 25,
+      alt: "SharkFoto Logo",
+    },
+    copyright: "Copyright © 2022 SharkFoto",
+    social: [
+      {
+        name: "Pinterest",
+        icon: "iconfont icon-pinterest",
+        url: "https://www.pinterest.com/sharkfoto/",
+        img: null,
+      },
+      {
+        name: "Facebook",
+        icon: null,
+        url: "https://www.facebook.com/SharkFoto-100253106125543",
+        img: "https://cdn.sharkfoto.com/social_ico_facebook.svg",
+      },
+      {
+        name: "Twitter",
+        icon: null,
+        url: "https://twitter.com/Shark_Foto",
+        img: "https://cdn.sharkfoto.com/social_ico_twitter.svg",
+      },
+      {
+        name: "LinkedIn",
+        icon: null,
+        url: "https://www.linkedin.com/company/sharkfoto",
+        img: "https://cdn.sharkfoto.com/social_ico_linkedin.svg",
+      },
+    ],
+    columns: [
+      {
+        title: "Photo AI",
+        links: [
+          { name: "BGRmover", url: "/bgremover/" },
+          { name: "ImageColorizer", url: "/image-colorizer/" },
+          { name: "ColorEnhancer", url: "/image-enhancer/" },
+          { name: "ClearityEnhancer", url: "/image-enhancer/" },
+          { name: "ResolutionEnhancer", url: "/image-enhancer/" },
+        ],
+      },
+      {
+        title: "Photo Tools",
+        links: [
+          { name: "ImageConverter", url: "/image-converter/" },
+          { name: "ImageCompressor", url: "/image-compressor/" },
+          { name: "ImageResizer", url: "/image-resizer/" },
+          { name: "ImageCropper", url: "/image-cropper/" },
+          { name: "ImageFlipper", url: "/image-flipper/" },
+          { name: "ImageRotater", url: "/image-rotater/" },
+          { name: "ImageEditor", url: "/app/?tool=editor" },
+        ],
+      },
+      {
+        title: "Popular Converter",
+        links: [
+          { name: "JPG Conveter", url: "/image-converter/jpg/" },
+          { name: "PNG Conveter", url: "/image-converter/png/" },
+          { name: "AVIF Conveter", url: "/image-converter/avif/" },
+          { name: "WEBP Conveter", url: "/image-converter/webp/" },
+          { name: "SVG Conveter", url: "/image-converter/svg/" },
+          { name: "BMP Conveter", url: "/image-converter/bmp/" },
+          { name: "ICO Conveter", url: "/image-converter/ico/" },
+        ],
+      },
+      {
+        title: "Resource",
+        links: [
+          { name: "Plan & Pricing", url: "/pricing/" },
+          { name: "Help & FAQs", url: "https://sharkfoto.com/help/" },
+          {
+            name: "Contact Us",
+            url: "https://sharkfoto.com/company/contact-us/",
+          },
+          { name: "Image Formats", url: "/format/" },
+          {
+            name: "Privacy Policy",
+            url: "https://sharkfoto.com/company/trust/privacy/",
+          },
+          {
+            name: "Terms of Use",
+            url: "https://sharkfoto.com/company/trust/terms/",
+          },
+        ],
+      },
+      {
+        title: "Company",
+        links: [
+          { name: "Sign In", url: "/sign-in/" },
+          { name: "Sign Up", url: "/sign-up/" },
+          { name: "About Us", url: "https://sharkfoto.com/company/" },
+        ],
+      },
+    ],
   },
 });

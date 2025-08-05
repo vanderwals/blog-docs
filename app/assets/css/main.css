@@ -87,7 +87,7 @@ html {
 .prose img {
   display: block;
   margin: 1.5rem auto;
-  max-height: 450px;
+  /* max-height: 450px; */
   width: auto;
   height: auto;
   object-fit: contain;
@@ -144,6 +144,41 @@ html {
   background: #374151;
 }
 
+/* 移动端目录按钮样式 */
+.mobile-toc-toggle {
+  position: fixed;
+  top: 5rem;
+  right: 1rem;
+  z-index: 50;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.mobile-toc-toggle-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dark .mobile-toc-toggle {
+  background: #1f2937;
+  border-color: #374151;
+}
+
+.mobile-toc-toggle:hover {
+  background: #f9fafb;
+}
+
+.dark .mobile-toc-toggle:hover {
+  background: #374151;
+}
+
 .mobile-nav-overlay {
   position: fixed;
   top: 0;
@@ -174,7 +209,7 @@ html {
   overflow-y: auto;
   padding: 1rem;
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-  padding-top: 4rem;
+  padding-top: 7rem;
 }
 
 .dark .mobile-nav-sidebar {
@@ -183,6 +218,30 @@ html {
 
 .mobile-nav-sidebar.active {
   left: 0;
+}
+
+/* 移动端目录侧边栏 */
+.mobile-toc-sidebar {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 280px;
+  height: 100vh;
+  background: white;
+  z-index: 45;
+  transition: right 0.3s ease;
+  overflow-y: auto;
+  padding: 1rem;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+  padding-top: 7rem;
+}
+
+.dark .mobile-toc-sidebar {
+  background: #1f2937;
+}
+
+.mobile-toc-sidebar.active {
+  right: 0;
 }
 
 /* 移动端内容区域调整 */

@@ -24,14 +24,21 @@ const ensureUniqueIds = (docs: any[]) => {
 };
 
 const miniSearch = ref<MiniSearch | null>(null);
+// 实现全匹配，并让标题为最高优先级
 onMounted(() => {
-  console.log("原始数据:", data.value);
+  // console.log("原始数据:", data.value);
   miniSearch.value = new MiniSearch({
     fields: ["title", "content", "titles"], // 可搜索字段
     storeFields: ["id", "title", "content", "titles", "level"], // 存储字段
     searchOptions: {
-      prefix: true,
-      fuzzy: 0.6,
+      prefix: false, // 关闭前缀匹配，要求全词匹配
+      fuzzy: 0,      // 关闭模糊匹配，要求完全匹配
+      boost: {       // 设置标题权重最高
+        title: 10,
+        titles: 3,
+        content: 1,
+      },
+      combineWith: "AND", // 多词时全部匹配
     },
   });
   const uniqueData = ensureUniqueIds(toValue(data.value) || []);
