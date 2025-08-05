@@ -100,7 +100,13 @@ watch(
 
 // 响应式控制目录显示
 const toggleToc = () => {
-  isTocVisible.value = !isTocVisible.value;
+  if (isTocVisible.value) {
+    isTocVisible.value = false;
+  } else {
+    // 打开目录时关闭导航
+    isMobileNavOpen.value = false;
+    isTocVisible.value = true;
+  }
 };
 
 // 关闭目录
@@ -137,7 +143,13 @@ const formatDate = (dateString) => {
 
 // 切换移动端导航
 const toggleMobileNav = () => {
-  isMobileNavOpen.value = !isMobileNavOpen.value;
+  if (isMobileNavOpen.value) {
+    isMobileNavOpen.value = false;
+  } else {
+    // 打开导航时关闭目录
+    isTocVisible.value = false;
+    isMobileNavOpen.value = true;
+  }
 };
 
 // 关闭移动端导航
