@@ -7,9 +7,21 @@ const isTocVisible = ref(false);
 const config = useAppConfig();
 const theme = computed(() => config.theme);
 
-// 获取导航树
-const { data: navigation } = await useAsyncData("navigation", () => {
-  return queryCollectionNavigation("content");
+// 获取导航树，去掉 title 为空的元素
+const { data: navigation } = await useAsyncData("navigation", async () => {
+  // 递归过滤函数，去除 title 为空的项
+  const filterEmptyTitle = (items) => {
+    if (!Array.isArray(items)) return [];
+    return items
+      .filter(item => item.title && item.title.trim() !== "")
+      .map(item => ({
+        ...item,
+        children: item.children ? filterEmptyTitle(item.children) : [],
+      }));
+  };
+
+  const nav = await queryCollectionNavigation("content");
+  return filterEmptyTitle(nav);
 });
 
 // 获取当前页面内容
@@ -121,7 +133,11 @@ const { data: surroundings } = await useAsyncData(
   () => {
     return queryCollectionItemSurroundings("content", route.path, {
       fields: ["path", "title"],
-    });
+    })
+      .all()
+      .then((list) =>
+        Array.isArray(list) ? list.filter((item) => item.id) : []
+      );
   }
 );
 

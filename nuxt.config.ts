@@ -58,8 +58,9 @@ export default defineNuxtConfig({
             console.error("blog-config.md 解析失败:", e);
           }
         }
-        // 删除该文件，不让其进入 content 数据库
-        ctx.file.body = ""; // 或者直接 return false;
+        ctx.file.body = "";
+        ctx.file.id = "";
+        return;
       }
       if (!fileTimesPromise) {
         console.log("开始获取 GitHub 文件时间数据...");
@@ -131,9 +132,7 @@ export default defineNuxtConfig({
 
       content.id = newId.join("/");
       content.stem = newId.join("/").replace(".md", "").replace("content/", "");
-      // console.log("**************************************************************");
-      // console.log(content);
-      // console.log("**************************************************************");
+      
     },
   },
   image: {

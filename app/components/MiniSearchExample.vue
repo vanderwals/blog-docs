@@ -3,7 +3,9 @@ import MiniSearch from "minisearch";
 
 const query = ref("");
 const { data } = await useAsyncData("search", () =>
-  queryCollectionSearchSections("content")
+  queryCollectionSearchSections("content").then((list) =>
+    Array.isArray(list) ? list.filter((item) => item.id) : []
+  )
 );
 
 // 添加辅助函数确保ID唯一性

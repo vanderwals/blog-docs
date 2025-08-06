@@ -59,9 +59,11 @@
 <script setup>
 const appConfig = useAppConfig();
 console.log("appConfig", appConfig);
-// 获取全部文档
+// 获取全部文档，排除掉 id 为空的元素
 const { data: allContent, pending } = await useAsyncData("all-content", () =>
-  queryCollection("content").all()
+  queryCollection("content")
+    .all()
+    .then((list) => (Array.isArray(list) ? list.filter((item) => item.id) : []))
 );
 console.log(allContent.value);
 
