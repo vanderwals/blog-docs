@@ -7,9 +7,9 @@
     "
     @click="toggleColorMode"
   >
-    <!-- 太阳图标 (浅色模式) -->
+    <!-- 太阳图标 (当前是浅色模式，点击切换到深色) -->
     <svg
-      v-if="colorMode.preference === 'dark'"
+      v-if="colorMode.preference === 'light'"
       class="w-5 h-5"
       fill="none"
       stroke="currentColor"
@@ -23,7 +23,7 @@
       />
     </svg>
 
-    <!-- 月亮图标 (深色模式) -->
+    <!-- 月亮图标 (当前是深色模式，点击切换到浅色) -->
     <svg
       v-else
       class="w-5 h-5"
@@ -45,6 +45,8 @@
 const colorMode = useColorMode();
 
 const toggleColorMode = () => {
-  colorMode.preference = colorMode.preference === "dark" ? "light" : "dark";
+  // 确保切换逻辑正确
+  const newMode = colorMode.preference === "dark" ? "light" : "dark";
+  colorMode.preference = newMode;
 };
 </script>
