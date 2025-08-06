@@ -4,9 +4,10 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build --preset=cloudflare_pages",
+    "build-pm2": "nuxt build --dotenv .env.local",
     "dev-old": "(if exist .nuxt rd /s /q .nuxt) & (if exist .data rd /s /q .data) & nuxt dev",
     "_dev": "(if exist .data rd /s /q .data) & nuxt dev",
-    "dev": "cls & nuxt dev",
+    "dev": "cls & nuxt dev --dotenv .env.local",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"

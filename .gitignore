@@ -25,3 +25,4 @@ logs
 /content
 /result.json
 /demo.ipynb
+/public/config.json

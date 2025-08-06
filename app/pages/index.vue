@@ -58,7 +58,7 @@
 
 <script setup>
 const appConfig = useAppConfig();
-
+console.log("appConfig", appConfig);
 // 获取全部文档
 const { data: allContent, pending } = await useAsyncData("all-content", () =>
   queryCollection("content").all()

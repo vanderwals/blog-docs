@@ -7,9 +7,9 @@
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
           <div class="flex items-center">
-            <NuxtLink to="/" class="flex items-center">
+            <NuxtLink :to="appConfig.site.logo.to" class="flex items-center">
               <!-- Logo -->
-              <div v-if="appConfig.site.logo.src" class="flex-shrink-0">
+              <div class="flex-shrink-0">
                 <NuxtImg
                   :src="appConfig.site.logo.src"
                   :alt="appConfig.site.logo.alt"
@@ -17,12 +17,6 @@
                   :height="appConfig.site.logo.height"
                   class="rounded-xl"
                 />
-              </div>
-              <div
-                v-else
-                class="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16 flex items-center justify-center"
-              >
-                <span class="text-gray-400 text-xs">Logo</span>
               </div>
 
               <!-- 网站名称 -->

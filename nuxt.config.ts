@@ -1,5 +1,5 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
-
+import fs from "fs";
+import path from "path";
 // 创建一个模块级别的 Promise 来管理文件时间数据的准备状态
 let fileTimesPromise: Promise<any> | null = null;
 
@@ -38,6 +38,29 @@ export default defineNuxtConfig({
   },
   hooks: {
     async "content:file:beforeParse"(ctx) {
+      // 检查是否为 blog-config.md
+      // console.log(ctx.file.id);
+      if (ctx.file && ctx.file.id && ctx.file.id.endsWith("blog-config.md")) {
+        const mdContent = ctx.file.body;
+        const match = mdContent.match(/```javascript\s*([\s\S]*?)```/);
+        if (match) {
+          const jsStr = match[1] || "";
+          try {
+            // 使用 Function 构造器安全地执行 JavaScript 代码
+            const config = Function(`return ${jsStr}`)();
+            fs.writeFileSync(
+              path.resolve(process.cwd(), "public/config.json"),
+              JSON.stringify(config, null, 2),
+              "utf-8"
+            );
+            console.log("config.json 写入成功");
+          } catch (e) {
+            console.error("blog-config.md 解析失败:", e);
+          }
+        }
+        // 删除该文件，不让其进入 content 数据库
+        ctx.file.body = ""; // 或者直接 return false;
+      }
       if (!fileTimesPromise) {
         console.log("开始获取 GitHub 文件时间数据...");
         fileTimesPromise = (async () => {
