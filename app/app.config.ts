@@ -33,7 +33,7 @@ export default defineAppConfig({
     sections: {
       latest: {
         title: "",
-        maxItems: 12,
+        maxItems: 40,
       },
     },
   },

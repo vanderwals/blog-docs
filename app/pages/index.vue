@@ -23,7 +23,7 @@
         <div
           v-for="article in articles"
           :key="article.path"
-          class="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden"
+          class="bg-white dark:bg-gray-800 rounded-lg shadow-lg dark:shadow-gray-900/20 hover:shadow-xl dark:hover:shadow-gray-900/30 transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-700"
         >
           <NuxtLink :to="article.path" class="block">
             <div class="p-6">
@@ -107,6 +107,12 @@ const getFirstImageUrl = (content) => {
   return null;
 };
 
+// 验证图片URL是否有效
+const isValidImageUrl = (url) => {
+  if (!url) return false;
+  return url.startsWith("http") || url.startsWith("//");
+};
+
 const DEFAULT_IMAGE_URL =
   "https://dsoh77ye4qgrq.cloudfront.net/public/images/cover-default.webp";
 
@@ -123,7 +129,7 @@ const articles = computed(() => {
         imageUrl = getFirstImageUrl(article.body);
       }
       // 如果没有图片，则使用默认图片
-      if (!imageUrl) {
+      if (!imageUrl || !isValidImageUrl(imageUrl)) {
         imageUrl = DEFAULT_IMAGE_URL;
       }
       return {
@@ -133,10 +139,10 @@ const articles = computed(() => {
     });
 });
 
-// 日期格式化函数
+// Date formatting function
 const formatDate = (dateString) => {
   const date = new Date(dateString);
-  return date.toLocaleDateString("zh-CN", {
+  return date.toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",

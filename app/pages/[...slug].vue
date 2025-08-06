@@ -131,13 +131,10 @@ const next = computed(() => surroundings.value?.[1]);
 // 日期格式化函数
 const formatDate = (dateString) => {
   const date = new Date(dateString);
-  return date.toLocaleDateString("zh-CN", {
+  return date.toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
   });
 };
 
@@ -293,50 +290,14 @@ onMounted(() => {
               >
                 <!-- Git提取的时间信息 -->
                 <div class="flex items-center flex-wrap gap-2">
-                  <span v-if="page.createdAt" class="flex items-center">
-                    <Icon
-                      name="i-heroicons-calendar-20-solid"
-                      class="w-4 h-4 mr-1"
-                    />
-                    创建: {{ formatDate(page.createdAt) }}
-                  </span>
-                  <span v-if="page.createdAt && page.updatedAt" class="mx-2"
-                    >•</span
-                  >
                   <span v-if="page.updatedAt" class="flex items-center">
                     <Icon
                       name="i-heroicons-clock-20-solid"
                       class="w-4 h-4 mr-1"
                     />
-                    更新: {{ formatDate(page.updatedAt) }}
-                  </span>
-                  <!-- 备用方案：显示frontmatter中的date字段 -->
-                  <span
-                    v-if="!page.createdAt && !page.updatedAt && page.date"
-                    class="flex items-center"
-                  >
-                    <Icon
-                      name="i-heroicons-clock-20-solid"
-                      class="w-4 h-4 mr-1"
-                    />
-                    最后更新: {{ formatDate(page.date) }}
+                    Last updated {{ formatDate(page.updatedAt) }}
                   </span>
                 </div>
-                <span
-                  v-if="
-                    (page.createdAt || page.updatedAt || page.date) &&
-                    page.readingTime?.text
-                  "
-                  class="mx-2 hidden sm:inline"
-                  >•</span
-                >
-                <span v-if="page.readingTime?.text" class="flex items-center">
-                  <Icon
-                    name="i-heroicons-book-open-20-solid"
-                    class="w-4 h-4 mr-1"
-                  />
-                  {{ page.readingTime.text }}
-                </span>
               </div>
             </template>
 
@@ -366,7 +327,7 @@ onMounted(() => {
                           <div
                             class="text-xs sm:text-sm text-gray-500 dark:text-gray-400"
                           >
-                            上一篇
+                            Previous
                           </div>
                           <div
                             class="text-sm sm:text-base font-medium text-gray-900 dark:text-white truncate"
@@ -393,7 +354,7 @@ onMounted(() => {
                           <div
                             class="text-xs sm:text-sm text-gray-500 dark:text-gray-400"
                           >
-                            下一篇
+                            Next
                           </div>
                           <div
                             class="text-sm sm:text-base font-medium text-gray-900 dark:text-white truncate"

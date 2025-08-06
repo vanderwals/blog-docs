@@ -5,7 +5,7 @@ let fileTimesPromise: Promise<any> | null = null;
 
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
-  devtools: { enabled: true },
+  devtools: { enabled: false },
 
   css: ["~/assets/css/main.css"],
 
@@ -104,6 +104,18 @@ export default defineNuxtConfig({
       // console.log("**************************************************************");
       // console.log(content);
       // console.log("**************************************************************");
+    },
+  },
+  image: {
+    presets: {
+      cover: {
+        modifiers: {
+          fit: "cover",
+          gravity: "auto",
+          quality: 90,
+          format: "webp",
+        },
+      },
     },
   },
 });

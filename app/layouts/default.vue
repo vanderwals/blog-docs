@@ -52,12 +52,12 @@
               </ul>
 
               <!-- 移动端显示第一个链接和下拉菜单 -->
-              <div class="md:hidden flex items-center mr-4">
+              <div class="md:hidden flex items-center space-x-2 mr-4">
                 <!-- 显示第一个链接 -->
                 <a
                   v-if="appConfig.navigation.links[0]"
                   :href="appConfig.navigation.links[0].url"
-                  class="text-gray-700 dark:text-gray-200 hover:underline mr-2"
+                  class="text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white transition-colors duration-200"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -71,10 +71,13 @@
                 >
                   <button
                     @click="toggleDropdown"
-                    class="text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white focus:outline-none"
+                    class="flex items-center justify-center w-8 h-8 text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 rounded-md transition-colors duration-200"
                   >
                     <svg
-                      class="w-5 h-5"
+                      :class="[
+                        'w-4 h-4 transition-transform duration-200 ease-in-out',
+                        isDropdownOpen ? 'rotate-180' : 'rotate-0',
+                      ]"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -89,24 +92,33 @@
                   </button>
 
                   <!-- 下拉菜单 -->
-                  <div
-                    v-if="isDropdownOpen"
-                    class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-50 border border-gray-200 dark:border-gray-700"
+                  <Transition
+                    enter-active-class="transition ease-out duration-200"
+                    enter-from-class="transform opacity-0 scale-95"
+                    enter-to-class="transform opacity-100 scale-100"
+                    leave-active-class="transition ease-in duration-150"
+                    leave-from-class="transform opacity-100 scale-100"
+                    leave-to-class="transform opacity-0 scale-95"
                   >
-                    <a
-                      v-for="(link, index) in appConfig.navigation.links.slice(
-                        1
-                      )"
-                      :key="link.name"
-                      :href="link.url"
-                      class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      @click="closeDropdown"
+                    <div
+                      v-if="isDropdownOpen"
+                      class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-50 border border-gray-200 dark:border-gray-700"
                     >
-                      {{ link.name }}
-                    </a>
-                  </div>
+                      <a
+                        v-for="(
+                          link, index
+                        ) in appConfig.navigation.links.slice(1)"
+                        :key="link.name"
+                        :href="link.url"
+                        class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        @click="closeDropdown"
+                      >
+                        {{ link.name }}
+                      </a>
+                    </div>
+                  </Transition>
                 </div>
               </div>
             </template>
