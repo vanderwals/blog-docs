@@ -40,7 +40,7 @@
               </div>
             </div>
             <p class="text-gray-600 dark:text-gray-400 line-clamp-3 mb-4 mt-4">
-              {{ article.description || "暂无描述" }}
+              {{ article.description || "No Description" }}
             </p>
 
             <div
@@ -109,8 +109,17 @@ const DEFAULT_IMAGE_URL =
 const articles = computed(() => {
   if (!allContent.value) return [];
 
+  const sortConfig = appConfig.sorting.homepage;
+  const sortField =
+    sortConfig.sortBy === "updatedAt" ? "updatedAt" : "createdAt";
+  const sortOrder = sortConfig.order === "asc" ? 1 : -1;
+
   return [...allContent.value]
-    .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+    .sort((a, b) => {
+      const aTime = new Date(a[sortField]).getTime();
+      const bTime = new Date(b[sortField]).getTime();
+      return (aTime - bTime) * sortOrder;
+    })
     .slice(0, appConfig.homepage.sections.latest.maxItems)
     .map((article) => {
       // 封面图片

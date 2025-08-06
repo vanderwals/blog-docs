@@ -21,6 +21,10 @@ export async function fetchRepoFileTimes(options: {
   repo: string;
   branch: string;
   token?: string;
+  sortConfig?: {
+    sortBy: "createdAt" | "updatedAt";
+    order: "asc" | "desc";
+  };
 }): Promise<FileItemWithIds> {
   const octokit = new Octokit({ auth: options.token });
   const cache: Record<string, FileTimes> = {};
@@ -138,11 +142,14 @@ export async function fetchRepoFileTimes(options: {
     Object.keys(groups).forEach((dirPath) => {
       const items = groups[dirPath] || [];
 
-      // 按创建时间降序排序（最新在前）
+      // 使用配置的排序方式
+      const sortField = options.sortConfig?.sortBy || "createdAt";
+      const sortOrder = options.sortConfig?.order === "asc" ? 1 : -1;
+
       items.sort((a, b) => {
-        const aTime = data[a]?.createdAt.getTime() || 0;
-        const bTime = data[b]?.createdAt.getTime() || 0;
-        return bTime - aTime || a.localeCompare(b);
+        const aTime = data[a]?.[sortField]?.getTime() || 0;
+        const bTime = data[b]?.[sortField]?.getTime() || 0;
+        return (aTime - bTime) * sortOrder || a.localeCompare(b);
       });
 
       // 计算需要补零的位数

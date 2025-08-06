@@ -128,14 +128,30 @@ const { data: surroundings } = await useAsyncData(
 const prev = computed(() => surroundings.value?.[0]);
 const next = computed(() => surroundings.value?.[1]);
 
-// 日期格式化函数
+// 日期格式化函数，返回“多久之前”，英文
 const formatDate = (dateString) => {
   const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const now = new Date();
+  const diff = Math.floor((now - date) / 1000); // 秒
+
+  if (diff < 60) {
+    return `${diff} seconds ago`;
+  } else if (diff < 3600) {
+    const mins = Math.floor(diff / 60);
+    return `${mins} minute${mins > 1 ? 's' : ''} ago`;
+  } else if (diff < 86400) {
+    const hours = Math.floor(diff / 3600);
+    return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+  } else if (diff < 2592000) {
+    const days = Math.floor(diff / 86400);
+    return `${days} day${days > 1 ? 's' : ''} ago`;
+  } else if (diff < 31536000) {
+    const months = Math.floor(diff / 2592000);
+    return `${months} month${months > 1 ? 's' : ''} ago`;
+  } else {
+    const years = Math.floor(diff / 31536000);
+    return `${years} year${years > 1 ? 's' : ''} ago`;
+  }
 };
 
 // 切换移动端导航

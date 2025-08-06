@@ -1,14 +1,6 @@
 <template>
   <div>
     <!-- 搜索框 - 只在最顶层显示 -->
-    <!-- <UInput
-      v-if="showSearch"
-      v-model="localSearchTerm"
-      placeholder="搜索文档..."
-      icon="i-heroicons-magnifying-glass"
-      size="md"
-      class="mb-4 w-full"
-    /> -->
     <MiniSearchExample v-if="showSearch" />
 
     <ul class="space-y-1">
@@ -36,7 +28,7 @@
               "
               class="w-4 h-4 mr-2 flex-shrink-0"
             />
-            <span class="truncate">{{ item.title }}</span>
+            <span>{{ item.title }}</span>
           </div>
         </div>
 
@@ -46,7 +38,7 @@
             :data-active="isActive(item.path) ? 'true' : undefined"
             :data-nav-type="navType"
             :to="item.path"
-            class="flex-1 px-3 py-2 rounded-md transition-colors block truncate"
+            class="flex-1 px-3 py-2 rounded-md transition-colors block"
             :class="{
               'navigation-active': isActive(item.path),
               'hover:bg-gray-100 dark:hover:bg-gray-800': !isActive(item.path),

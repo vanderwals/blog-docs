@@ -49,6 +49,13 @@ export default defineNuxtConfig({
             repo: process.env.GITHUB_REPO_NAME || "",
             branch: process.env.GITHUB_REPO_BRANCH || "",
             token: process.env.GITHUB_TOKEN,
+            sortConfig: {
+              sortBy:
+                (process.env.FOLDER_SORT_BY as "createdAt" | "updatedAt") ||
+                "createdAt",
+              order:
+                (process.env.FOLDER_SORT_ORDER as "asc" | "desc") || "desc",
+            },
           });
 
           (globalThis as any).fileTimesCache = cache;
