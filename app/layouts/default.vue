@@ -135,7 +135,7 @@
         class="container mx-auto px-2 sm:px-4 lg:px-6 flex flex-col items-center"
       >
         <div
-          class="flex flex-col-reverse sm:flex-row flex-wrap justify-center gap-6 w-full max-w-6xl"
+          class="flex flex-col-reverse sm:flex-row flex-wrap justify-center items-start gap-3 w-full max-w-6xl"
         >
           <!-- 左侧LOGO和标语 -->
           <div class="flex flex-col items-center min-w-[180px]">
@@ -177,7 +177,7 @@
           <!-- 右侧多列导航 -->
           <div
             v-if="appConfig.footer.columns.length > 0"
-            class="flex flex-wrap flex-1 gap-3 justify-center mb-6 sm:mb-0"
+            class="flex flex-wrap gap-3 mb-6 sm:mb-0"
           >
             <div
               v-for="col in appConfig.footer.columns"

@@ -26,7 +26,6 @@
           class="bg-white dark:bg-gray-800 rounded-lg shadow-lg dark:shadow-gray-900/20 hover:shadow-xl dark:hover:shadow-gray-900/30 transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-700"
         >
           <NuxtLink :to="article.path" class="block p-6">
-            <!-- <div class=""> -->
             <div class="aspect-video overflow-hidden rounded-lg mb-4">
               <div
                 class="w-full h-full rounded-xl box-border flex items-center justify-center overflow-hidden"
@@ -39,7 +38,14 @@
                 />
               </div>
             </div>
-            <p class="text-gray-600 dark:text-gray-400 line-clamp-3 mb-4 mt-4">
+            <h3
+              class="text-xl font-bold text-gray-900 dark:text-white mb-1 leading-tight tracking-tight"
+            >
+              {{ article.title }}
+            </h3>
+            <p
+              class="text-base font-normal text-gray-500 dark:text-gray-400 line-clamp-3 mb-4 mt-2"
+            >
               {{ article.description || "No Description" }}
             </p>
 
@@ -48,7 +54,6 @@
             >
               <span>{{ formatDate(article.createdAt) }}</span>
             </div>
-            <!-- </div> -->
           </NuxtLink>
         </div>
       </div>
