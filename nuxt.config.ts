@@ -167,7 +167,7 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      script: true
+      script: false
         ? []
         : [
             {
