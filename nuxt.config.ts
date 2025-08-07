@@ -130,9 +130,27 @@ export default defineNuxtConfig({
         }
       }
 
+      // 更新 path 以匹配新的 id 结构
+      // const newPath = content.id.replace("content/", "").replace(".md", "");
+      // content.path = `/${newPath}`;
+      // 追加写入到jsonl文件，类似于 Python 的 a+ 模式
+      fs.appendFileSync(
+        path.resolve(process.cwd(), "result2.jsonl"),
+        JSON.stringify(
+          {
+            file: file,
+            content: content,
+            newId: newId.join("/"),
+            newStem: newId.join("/").replace(".md", "").replace("content/", ""),
+          },
+          null,
+          2
+        ) + ",\n",
+        { encoding: "utf-8", flag: "a" }
+      );
+
       content.id = newId.join("/");
       content.stem = newId.join("/").replace(".md", "").replace("content/", "");
-      
     },
   },
   image: {

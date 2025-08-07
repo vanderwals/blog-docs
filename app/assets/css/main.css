@@ -133,7 +133,7 @@ html {
 }
 
 .dark .mobile-nav-toggle {
-  background: #1f2937;
+  background: #101828;
   border-color: #374151;
 }
 
@@ -168,7 +168,7 @@ html {
 }
 
 .dark .mobile-toc-toggle {
-  background: #1f2937;
+  background: #101828;
   border-color: #374151;
 }
 
@@ -214,7 +214,7 @@ html {
 }
 
 .dark .mobile-nav-sidebar {
-  background: #1f2937;
+  background: #101828;
 }
 
 .mobile-nav-sidebar.active {
@@ -238,7 +238,7 @@ html {
 }
 
 .dark .mobile-toc-sidebar {
-  background: #1f2937;
+  background: #101828;
 }
 
 .mobile-toc-sidebar.active {

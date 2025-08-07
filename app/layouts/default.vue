@@ -175,7 +175,10 @@
             </ul>
           </div>
           <!-- 右侧多列导航 -->
-          <div class="flex flex-wrap flex-1 gap-3 justify-center mb-6 sm:mb-0">
+          <div
+            v-if="appConfig.footer.columns.length > 0"
+            class="flex flex-wrap flex-1 gap-3 justify-center mb-6 sm:mb-0"
+          >
             <div
               v-for="col in appConfig.footer.columns"
               :key="col.title"

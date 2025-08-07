@@ -32,13 +32,14 @@ export async function fetchRepoFileTimes(options: {
   // 递归获取目录内容
   async function processDirectory(path: string) {
     try {
+      console.log("正在获取目录：", path);
       const { data } = await octokit.rest.repos.getContent({
         owner: options.owner,
         repo: options.repo,
         ref: options.branch,
         path,
       });
-
+      // console.log("获取目录内容：", data);
       if (!Array.isArray(data)) return;
 
       for (const item of data) {

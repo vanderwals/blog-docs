@@ -26,3 +26,5 @@ logs
 /result.json
 /demo.ipynb
 /public/config.json
+/blog-config.md
+/*.jsonl

@@ -13,8 +13,8 @@ const { data: navigation } = await useAsyncData("navigation", async () => {
   const filterEmptyTitle = (items) => {
     if (!Array.isArray(items)) return [];
     return items
-      .filter(item => item.title && item.title.trim() !== "")
-      .map(item => ({
+      .filter((item) => item.title && item.title.trim() !== "")
+      .map((item) => ({
         ...item,
         children: item.children ? filterEmptyTitle(item.children) : [],
       }));

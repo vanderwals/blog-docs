@@ -3,7 +3,12 @@
     <!-- 搜索框 - 只在最顶层显示 -->
     <MiniSearchExample v-if="showSearch" />
 
-    <ul class="space-y-1">
+    <ul
+      class="space-y-1"
+      :class="{
+        'border-l border-gray-200 dark:border-gray-700 ml-2 pl-2': !isTopLevel,
+      }"
+    >
       <li v-for="item in filteredItems" :key="item.path">
         <!-- 有子项目的文件夹：整行可点击来展开/折叠 -->
         <div
@@ -58,6 +63,7 @@
             :nav-type="navType"
             :show-search="false"
             :search-term="effectiveSearchTerm"
+            :is-top-level="false"
             class="ml-4 mt-1"
           />
         </div>
@@ -83,6 +89,10 @@ const props = defineProps({
   searchTerm: {
     type: String,
     default: "", // 从父组件传递的搜索词
+  },
+  isTopLevel: {
+    type: Boolean,
+    default: true, // 是否是顶层导航
   },
 });
 
@@ -167,10 +177,33 @@ const scrollToActiveItem = () => {
 
   // 使用 setTimeout 确保 DOM 完全更新和路由过渡完成
   setTimeout(() => {
-    // 根据导航类型选择对应的激活元素
-    const activeElement = document.querySelector(
-      `[data-active="true"][data-nav-type="${props.navType}"]`
+    // 选出所有激活元素
+    const activeElements = Array.from(
+      document.querySelectorAll(
+        `[data-active="true"][data-nav-type="${props.navType}"]`
+      )
     );
+    if (activeElements.length === 0) return;
+
+    // 选出最深层的激活元素
+    let deepestElement = activeElements[0];
+    let maxDepth = 0;
+    for (const el of activeElements) {
+      let depth = 0;
+      let parent = el;
+      while (parent) {
+        parent = parent.parentElement;
+        if (parent && activeElements.includes(parent)) {
+          depth++;
+        }
+      }
+      if (depth >= maxDepth) {
+        maxDepth = depth;
+        deepestElement = el;
+      }
+    }
+
+    const activeElement = deepestElement;
     if (activeElement) {
       // 找到可滚动的父容器
       const scrollableParent = activeElement.closest(
@@ -232,9 +265,32 @@ onMounted(() => {
 </script>
 
 <style scoped>
+/* 导航树整体字体样式 */
+ul {
+  font-size: 0.875rem; /* 14px */
+  font-weight: normal;
+}
+
+/* 导航项字体样式 */
+ul li div,
+ul li a {
+  font-size: 0.875rem; /* 14px */
+  font-weight: normal;
+}
+
+/* 子层级的细竖线样式 */
+ul.border-l {
+  border-left-width: 1px;
+  border-left-color: rgb(229 231 235); /* gray-200 */
+}
+
+.dark ul.border-l {
+  border-left-color: rgb(55 65 81); /* gray-700 */
+}
+
 .navigation-active {
   background-color: v-bind("theme.navigationActive") !important;
-  font-weight: 500;
+  font-weight: normal; /* 去掉加粗 */
 }
 
 .dark .navigation-active {
