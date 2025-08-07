@@ -4,8 +4,14 @@ const isMobileNavOpen = ref(false);
 const isTocVisible = ref(false);
 
 // 获取主题配置
-const config = useAppConfig();
-const theme = computed(() => config.theme);
+const theme = computed(() => {
+  try {
+    const config = useAppConfig();
+    return config.theme;
+  } catch {
+    return { primary: "#3b82f6" }; // 默认主题
+  }
+});
 
 // 获取导航树，去掉 title 为空的元素
 const { data: navigation } = await useAsyncData("navigation", async () => {
@@ -29,6 +35,54 @@ const { data: page } = await useAsyncData(route.path, () => {
   return queryCollection("content").path(route.path).first();
 });
 console.log(page.value);
+
+useSeoMeta({
+    title: page.value.title,
+    description: page.value.description,
+    ogSiteName: "SharkFoto",
+    ogType: "website",
+    ogLocale: "en_US",
+    ogImage: "https://cdn.sharkfoto.com/sharkfoto_og.png",
+    ogUrl: "https://sharkfoto.gitbook.io/blog",
+    ogTitle: page.value.title,
+    ogDescription: page.value.description,
+    twitterCard: "summary_large_image",
+    twitterUrl: "https://sharkfoto.gitbook.io/blog",
+    twitterTitle: page.value.title,
+    twitterImage: "https://cdn.sharkfoto.com/sharkfoto_og.png",
+    twitterSite: "@SharkFoto",
+    twitterDescription: page.value.description,
+});
+
+// 设置页面元信息
+useHead(() => {
+  if (!page.value) return {};
+
+  const pageTitle = page.value.title;
+  const pageDescription =
+    page.value.description ||
+    "SharkFoto Blog - Professional Photography and AI Tools";
+  const fullTitle = `${pageTitle} | SharkFoto Blog`;
+
+  return {
+    title: fullTitle,
+    meta: [
+      { name: "description", content: pageDescription },
+      { property: "og:title", content: fullTitle },
+      { property: "og:description", content: pageDescription },
+      {
+        property: "og:image",
+        content: "https://cdn.sharkfoto.com/sharkfoto_og.png",
+      },
+    ],
+    link: [
+      {
+        rel: "canonical",
+        href: `https://sharkfoto.gitbook.io/blog${route.path}`,
+      },
+    ],
+  };
+});
 // 去除内容中的一级标题
 const processedPage = computed(() => {
   if (!page.value) return null;
@@ -37,12 +91,10 @@ const processedPage = computed(() => {
   const processed = { ...page.value };
 
   // 处理 body 内容，去除一级标题
-  for (const node of processed.body.value) {
-    // console.log(node);
-    if (node[0] === "h1") {
-      // 删除该节点
-      processed.body.value.splice(node, 1);
-    }
+  if (processed.body && processed.body.value) {
+    processed.body.value = processed.body.value.filter(
+      (node) => node[0] !== "h1"
+    );
   }
 
   return processed;
@@ -55,42 +107,49 @@ const pageHeadings = ref([]);
 const extractHeadings = () => {
   if (!process.client) return;
 
-  const headings = document.querySelectorAll("h2, h3, h4");
-  const extracted = [];
+  try {
+    const headings = document.querySelectorAll("h2, h3, h4");
+    const extracted = [];
 
-  headings.forEach((heading, index) => {
-    // 如果没有id，生成一个
-    if (!heading.id) {
-      heading.id = `heading-${index}`;
+    headings.forEach((heading, index) => {
+      // 如果没有id，生成一个
+      if (!heading.id) {
+        heading.id = `heading-${index}`;
+      }
+
+      extracted.push({
+        id: heading.id,
+        text: heading.textContent,
+        level: parseInt(heading.tagName.charAt(1)),
+      });
+    });
+
+    // 添加页面标题作为第一个标题
+    if (page.value?.title) {
+      extracted.unshift({
+        id: "heading-0",
+        text: page.value.title,
+        level: 1,
+      });
     }
 
-    extracted.push({
-      id: heading.id,
-      text: heading.textContent,
-      level: parseInt(heading.tagName.charAt(1)),
-    });
-  });
-
-  // 添加页面标题作为第一个标题
-  if (page.value?.title) {
-    extracted.unshift({
-      id: "heading-0",
-      text: page.value.title,
-      level: 1,
-    });
+    pageHeadings.value = extracted;
+    console.log("提取的标题:", pageHeadings.value);
+  } catch (error) {
+    console.error("提取标题时出错:", error);
+    pageHeadings.value = [];
   }
-
-  pageHeadings.value = extracted;
-  console.log("提取的标题:", pageHeadings.value);
 };
 
 // 监听内容变化，重新提取标题
 watch(
   () => processedPage.value,
   () => {
-    nextTick(() => {
-      extractHeadings();
-    });
+    if (process.client) {
+      nextTick(() => {
+        extractHeadings();
+      });
+    }
   },
   { immediate: true }
 );
@@ -102,11 +161,13 @@ watch(
     // 清空当前标题
     pageHeadings.value = [];
     // 等待内容渲染完成后重新提取
-    nextTick(() => {
-      setTimeout(() => {
-        extractHeadings();
-      }, 100); // 给一点时间让DOM完全渲染
-    });
+    if (process.client) {
+      nextTick(() => {
+        setTimeout(() => {
+          extractHeadings();
+        }, 100); // 给一点时间让DOM完全渲染
+      });
+    }
   }
 );
 
@@ -200,8 +261,10 @@ watch(
 );
 
 // 监听ESC键关闭导航和目录
+let handleEsc;
+
 onMounted(() => {
-  const handleEsc = (e) => {
+  handleEsc = (e) => {
     if (e.key === "Escape") {
       if (isMobileNavOpen.value) {
         closeMobileNav();
@@ -215,15 +278,19 @@ onMounted(() => {
   document.addEventListener("keydown", handleEsc);
 
   // 确保在组件挂载后提取标题
-  nextTick(() => {
-    setTimeout(() => {
-      extractHeadings();
-    }, 100);
-  });
+  if (process.client) {
+    nextTick(() => {
+      setTimeout(() => {
+        extractHeadings();
+      }, 100);
+    });
+  }
+});
 
-  onUnmounted(() => {
+onUnmounted(() => {
+  if (handleEsc) {
     document.removeEventListener("keydown", handleEsc);
-  });
+  }
 });
 </script>
 

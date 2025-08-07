@@ -64,6 +64,26 @@
 <script setup>
 const appConfig = useAppConfig();
 console.log("appConfig", appConfig);
+
+// 设置主页元信息
+useHead(() => {
+  return {
+    title: appConfig.homepage.hero.title,
+    meta: [
+      { name: "description", content: appConfig.homepage.hero.subtitle },
+      {
+        property: "og:title",
+        content: `${appConfig.homepage.hero.title} | SharkFoto Blog`,
+      },
+      { property: "og:description", content: appConfig.homepage.hero.subtitle },
+      {
+        property: "og:image",
+        content: "https://cdn.sharkfoto.com/sharkfoto_og.png",
+      },
+    ],
+    link: [{ rel: "canonical", href: "https://sharkfoto.gitbook.io/blog" }],
+  };
+});
 // 获取全部文档，排除掉 id 为空的元素
 const { data: allContent, pending } = await useAsyncData("all-content", () =>
   queryCollection("content")

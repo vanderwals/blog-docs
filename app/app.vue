@@ -24,13 +24,50 @@ onMounted(async () => {
     appConfig.value = { ...defaultConfig };
     console.error("配置更新失败", e);
   }
+  console.log("seo", {
+    title: appConfig.value.homepage.hero.title,
+    description: appConfig.value.homepage.hero.subtitle,
+    ogSiteName: "SharkFoto",
+    ogType: "website",
+    ogLocale: "en_US",
+    ogImage: "https://cdn.sharkfoto.com/sharkfoto_og.png",
+    ogUrl: "https://sharkfoto.gitbook.io/blog",
+    ogTitle: appConfig.value.homepage.hero.title,
+    ogDescription: appConfig.value.homepage.hero.subtitle,
+    twitterCard: "summary_large_image",
+    twitterUrl: "https://sharkfoto.gitbook.io/blog",
+    twitterTitle: appConfig.value.homepage.hero.title,
+    twitterImage: "https://cdn.sharkfoto.com/sharkfoto_og.png",
+    twitterSite: "@SharkFoto",
+    twitterDescription: appConfig.value.homepage.hero.subtitle,
+  });
+  useSeoMeta({
+    title: appConfig.value.homepage.hero.title,
+    description: appConfig.value.homepage.hero.subtitle,
+    ogSiteName: "SharkFoto",
+    ogType: "website",
+    ogLocale: "en_US",
+    ogImage: "https://cdn.sharkfoto.com/sharkfoto_og.png",
+    ogUrl: "https://sharkfoto.gitbook.io/blog",
+    ogTitle: appConfig.value.homepage.hero.title,
+    ogDescription: appConfig.value.homepage.hero.subtitle,
+    twitterCard: "summary_large_image",
+    twitterUrl: "https://sharkfoto.gitbook.io/blog",
+    twitterTitle: appConfig.value.homepage.hero.title,
+    twitterImage: "https://cdn.sharkfoto.com/sharkfoto_og.png",
+    twitterSite: "@SharkFoto",
+    twitterDescription: appConfig.value.homepage.hero.subtitle,
+  });
+
+  // 设置基础元信息
   useHead({
     meta: [
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { name: "description", content: appConfig.value.homepage.hero.subtitle },
+      {
+        property: "og:image",
+        content: "https://cdn.sharkfoto.com/sharkfoto_og.png",
+      },
     ],
     link: [{ rel: "icon", href: appConfig.value.site.logo.src }],
-    title: appConfig.value.homepage.hero.title,
     htmlAttrs: {
       lang: "en",
     },
