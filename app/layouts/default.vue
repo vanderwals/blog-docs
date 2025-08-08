@@ -15,7 +15,6 @@
                   :alt="appConfig.site.logo.alt"
                   :width="appConfig.site.logo.width"
                   :height="appConfig.site.logo.height"
-                  class="rounded-xl"
                 />
               </div>
 

@@ -70,7 +70,7 @@ const formatContent = (content: string): string => {
       placeholder="Search..."
       icon="i-heroicons-magnifying-glass"
       size="md"
-      class="mb-4 w-full"
+      class="mb-2 w-full"
     >
       <!-- 清除按钮 -->
       <template #trailing>

@@ -1,7 +1,9 @@
 <template>
   <div>
-    <!-- 搜索框 - 只在最顶层显示 -->
-    <MiniSearchExample v-if="showSearch" />
+    <!-- 搜索框 - 只在最顶层显示，且固定在顶部 -->
+    <div v-if="showSearch" class="sticky -top-4 z-10 bg-white dark:bg-gray-900">
+      <MiniSearchExample />
+    </div>
 
     <ul
       class="space-y-1"
