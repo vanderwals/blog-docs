@@ -3,11 +3,12 @@ const route = useRoute();
 const isMobileNavOpen = ref(false);
 const isTocVisible = ref(false);
 
+// 获取网站配置
+const appConfig = useAppConfig();
 // 获取主题配置
 const theme = computed(() => {
   try {
-    const config = useAppConfig();
-    return config.theme;
+    return appConfig.theme;
   } catch {
     return { primary: "#3b82f6" }; // 默认主题
   }
@@ -36,22 +37,34 @@ const { data: page } = await useAsyncData(route.path, () => {
 });
 console.log(page.value);
 
+// 使用计算属性来确保SEO信息在数据加载后更新
+const seoTitle = computed(() => page.value?.title || "SharkFoto Blog");
+const seoDescription = computed(
+  () =>
+    page.value?.description ||
+    "SharkFoto Blog - Professional Photography and AI Tools"
+);
+const siteUrl = computed(
+  () => (appConfig.seo?.url || "https://sharkfoto.gitbook.io/blog").replace(/\/$/, "")
+);
+
+// 设置页面级别的SEO信息
 useSeoMeta({
-    title: page.value.title,
-    description: page.value.description,
-    ogSiteName: "SharkFoto",
-    ogType: "website",
-    ogLocale: "en_US",
-    ogImage: "https://cdn.sharkfoto.com/sharkfoto_og.png",
-    ogUrl: "https://sharkfoto.gitbook.io/blog",
-    ogTitle: page.value.title,
-    ogDescription: page.value.description,
-    twitterCard: "summary_large_image",
-    twitterUrl: "https://sharkfoto.gitbook.io/blog",
-    twitterTitle: page.value.title,
-    twitterImage: "https://cdn.sharkfoto.com/sharkfoto_og.png",
-    twitterSite: "@SharkFoto",
-    twitterDescription: page.value.description,
+  title: seoTitle,
+  description: seoDescription,
+  ogSiteName: appConfig.seo.siteName,
+  ogType: "article", // 改为 article 类型，更适合博客文章
+  ogLocale: "en_US",
+  ogImage: "https://cdn.sharkfoto.com/sharkfoto_og.png",
+  ogUrl: computed(() => `${siteUrl.value}${route.path}`),
+  ogTitle: seoTitle,
+  ogDescription: seoDescription,
+  twitterCard: "summary_large_image",
+  twitterUrl: computed(() => `${siteUrl.value}${route.path}`),
+  twitterTitle: seoTitle,
+  twitterImage: "https://cdn.sharkfoto.com/sharkfoto_og.png",
+  twitterSite: appConfig.seo.twitter.site,
+  twitterDescription: seoDescription,
 });
 
 // 设置页面元信息
@@ -70,15 +83,27 @@ useHead(() => {
       { name: "description", content: pageDescription },
       { property: "og:title", content: fullTitle },
       { property: "og:description", content: pageDescription },
+      { property: "og:type", content: "article" },
+      {
+        property: "og:url",
+        content: `${siteUrl.value}${route.path}`,
+      },
       {
         property: "og:image",
         content: "https://cdn.sharkfoto.com/sharkfoto_og.png",
       },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: fullTitle },
+      { name: "twitter:description", content: pageDescription },
+      // {
+      //   name: "twitter:image",
+      //   content: "https://cdn.sharkfoto.com/sharkfoto_og.png",
+      // },
     ],
     link: [
       {
         rel: "canonical",
-        href: `https://sharkfoto.gitbook.io/blog${route.path}`,
+        href: `${siteUrl.value}${route.path}`,
       },
     ],
   };
@@ -134,7 +159,7 @@ const extractHeadings = () => {
     }
 
     pageHeadings.value = extracted;
-    console.log("提取的标题:", pageHeadings.value);
+    // console.log("提取的标题:", pageHeadings.value);
   } catch (error) {
     console.error("提取标题时出错:", error);
     pageHeadings.value = [];
@@ -187,21 +212,22 @@ const closeToc = () => {
   isTocVisible.value = false;
 };
 
-// console.log(page.value);
-// 获取上一篇和下一篇
+// 获取上一篇和下一篇，筛除掉id为空的元素
 const { data: surroundings } = await useAsyncData(
   `surround-${route.path}`,
-  () => {
-    return queryCollectionItemSurroundings("content", route.path, {
-      fields: ["path", "title"],
-    })
-      .all()
-      .then((list) =>
-        Array.isArray(list) ? list.filter((item) => item.id) : []
-      );
+  async () => {
+    const result = await queryCollectionItemSurroundings(
+      "content",
+      route.path,
+      {
+        fields: ["path", "title", "id"],
+      }
+    );
+    // 保持原始数据格式，但过滤掉id为空的项
+    return result.map((item) => (item && item.id ? item : null));
   }
 );
-
+// console.log("surroundings", surroundings.value);
 const prev = computed(() => surroundings.value?.[0]);
 const next = computed(() => surroundings.value?.[1]);
 
@@ -377,7 +403,9 @@ onUnmounted(() => {
         <main class="flex-grow min-w-0 lg:pl-8 xl:pr-8 py-8 mobile-content">
           <UCard v-if="page" class="w-full">
             <template #header>
-              <h1 class="text-3xl font-bold">{{ page.title }}</h1>
+              <h1 id="heading-0" class="text-3xl font-bold">
+                {{ page.title }}
+              </h1>
               <div
                 v-if="page.description"
                 class="mt-2 text-gray-600 dark:text-gray-400"

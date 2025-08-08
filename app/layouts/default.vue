@@ -135,10 +135,10 @@
         class="container mx-auto px-2 sm:px-4 lg:px-6 flex flex-col items-center"
       >
         <div
-          class="flex flex-col-reverse sm:flex-row flex-wrap justify-center items-start gap-3 w-full max-w-6xl"
+          class="flex flex-col-reverse sm:flex-row flex-wrap justify-center items-center gap-5 w-full max-w-6xl"
         >
           <!-- 左侧LOGO和标语 -->
-          <div class="flex flex-col items-center min-w-[180px]">
+          <div class="flex flex-col items-center min-w-[180px] text-center">
             <div class="mb-2">
               <a :href="'/'">
                 <img
@@ -177,12 +177,12 @@
           <!-- 右侧多列导航 -->
           <div
             v-if="appConfig.footer.columns.length > 0"
-            class="flex flex-wrap gap-3 mb-6 sm:mb-0"
+            class="flex flex-wrap gap-3 mb-6 sm:mb-0 justify-center sm:justify-start"
           >
             <div
               v-for="col in appConfig.footer.columns"
               :key="col.title"
-              class="min-w-[110px] mb-3"
+              class="min-w-[110px] mb-3 text-center sm:text-left"
             >
               <div class="text-sm font-bold mb-2">{{ col.title }}</div>
               <div>

@@ -67,6 +67,7 @@ console.log("appConfig", appConfig);
 
 // 设置主页元信息
 useHead(() => {
+  const siteUrl = (appConfig.seo?.url || "https://sharkfoto.gitbook.io/blog").replace(/\/$/, "");
   return {
     title: appConfig.homepage.hero.title,
     meta: [
@@ -76,13 +77,47 @@ useHead(() => {
         content: `${appConfig.homepage.hero.title} | SharkFoto Blog`,
       },
       { property: "og:description", content: appConfig.homepage.hero.subtitle },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: siteUrl },
       {
         property: "og:image",
         content: "https://cdn.sharkfoto.com/sharkfoto_og.png",
       },
+      { name: "twitter:card", content: "summary_large_image" },
+      {
+        name: "twitter:title",
+        content: `${appConfig.homepage.hero.title} | SharkFoto Blog`,
+      },
+      {
+        name: "twitter:description",
+        content: appConfig.homepage.hero.subtitle,
+      },
+      {
+        name: "twitter:image",
+        content: "https://cdn.sharkfoto.com/sharkfoto_og.png",
+      },
     ],
-    link: [{ rel: "canonical", href: "https://sharkfoto.gitbook.io/blog" }],
+    link: [{ rel: "canonical", href: siteUrl }],
   };
+});
+
+// 同时设置 useSeoMeta 以确保兼容性
+useSeoMeta({
+  title: appConfig.homepage.hero.title,
+  description: appConfig.homepage.hero.subtitle,
+  ogSiteName: "SharkFoto",
+  ogType: "website",
+  ogLocale: "en_US",
+  ogImage: "https://cdn.sharkfoto.com/sharkfoto_og.png",
+  ogUrl: (appConfig.seo?.url || "https://sharkfoto.gitbook.io/blog").replace(/\/$/, ""),
+  ogTitle: `${appConfig.homepage.hero.title} | SharkFoto Blog`,
+  ogDescription: appConfig.homepage.hero.subtitle,
+  twitterCard: "summary_large_image",
+  twitterUrl: (appConfig.seo?.url || "https://sharkfoto.gitbook.io/blog").replace(/\/$/, ""),
+  twitterTitle: `${appConfig.homepage.hero.title} | SharkFoto Blog`,
+  twitterImage: "https://cdn.sharkfoto.com/sharkfoto_og.png",
+  twitterSite: "@SharkFoto",
+  twitterDescription: appConfig.homepage.hero.subtitle,
 });
 // 获取全部文档，排除掉 id 为空的元素
 const { data: allContent, pending } = await useAsyncData("all-content", () =>
