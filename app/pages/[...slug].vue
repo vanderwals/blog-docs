@@ -38,14 +38,13 @@ const { data: page } = await useAsyncData(route.path, () => {
 console.log(page.value);
 
 // 使用计算属性来确保SEO信息在数据加载后更新
-const seoTitle = computed(() => page.value?.title || "SharkFoto Blog");
+const seoTitle = computed(() => page.value.title);
 const seoDescription = computed(
   () =>
-    page.value?.description ||
-    "SharkFoto Blog - Professional Photography and AI Tools"
+    page.value.description
 );
 const siteUrl = computed(
-  () => (appConfig.seo?.url || "https://sharkfoto.gitbook.io/blog").replace(/\/$/, "")
+  () => appConfig.seo.url.replace(/\/$/, "")
 );
 
 // 设置页面级别的SEO信息
@@ -55,14 +54,14 @@ useSeoMeta({
   ogSiteName: appConfig.seo.siteName,
   ogType: "article", // 改为 article 类型，更适合博客文章
   ogLocale: "en_US",
-  ogImage: "https://cdn.sharkfoto.com/sharkfoto_og.png",
+  // ogImage: "https://cdn.sharkfoto.com/sharkfoto_og.png",
   ogUrl: computed(() => `${siteUrl.value}${route.path}`),
   ogTitle: seoTitle,
   ogDescription: seoDescription,
   twitterCard: "summary_large_image",
   twitterUrl: computed(() => `${siteUrl.value}${route.path}`),
   twitterTitle: seoTitle,
-  twitterImage: "https://cdn.sharkfoto.com/sharkfoto_og.png",
+  // twitterImage: "https://cdn.sharkfoto.com/sharkfoto_og.png",
   twitterSite: appConfig.seo.twitter.site,
   twitterDescription: seoDescription,
 });
@@ -72,10 +71,8 @@ useHead(() => {
   if (!page.value) return {};
 
   const pageTitle = page.value.title;
-  const pageDescription =
-    page.value.description ||
-    "SharkFoto Blog - Professional Photography and AI Tools";
-  const fullTitle = `${pageTitle} | SharkFoto Blog`;
+  const pageDescription = page.value.description;
+  const fullTitle = `${pageTitle} | ${appConfig.seo.siteName} Blog`;
 
   return {
     title: fullTitle,
@@ -88,10 +85,10 @@ useHead(() => {
         property: "og:url",
         content: `${siteUrl.value}${route.path}`,
       },
-      {
-        property: "og:image",
-        content: "https://cdn.sharkfoto.com/sharkfoto_og.png",
-      },
+      //{
+      //  property: "og:image",
+      //  content: "https://cdn.sharkfoto.com/sharkfoto_og.png",
+      //},
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: fullTitle },
       { name: "twitter:description", content: pageDescription },

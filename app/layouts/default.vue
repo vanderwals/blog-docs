@@ -130,7 +130,9 @@
 
     <!-- 底部 -->
     <footer class="bg-gray-900 text-white py-6">
+      <!-- SharkFoto 脚部格式 -->
       <div
+        v-if="isSharkFotoSite"
         class="container mx-auto px-2 sm:px-4 lg:px-6 flex flex-col items-center"
       >
         <div
@@ -200,6 +202,49 @@
           </div>
         </div>
       </div>
+
+      <!-- Creati.ai 脚部格式 -->
+      <div v-else class="footer">
+        <div class="footerContainer">
+          <div
+            class="flex flex-col md:flex-row justify-between items-center gap-10"
+          >
+            <!-- 左侧版权信息 -->
+            <div class="text-center md:text-left">
+              {{ appConfig.creatiFooter.alternative.copyright }}
+            </div>
+
+            <!-- 右侧链接和图标 -->
+            <div class="flex flex-col sm:flex-row items-center gap-4">
+              <!-- 链接 -->
+              <div class="flex flex-wrap gap-4 justify-center">
+                <a
+                  v-for="link in appConfig.creatiFooter.alternative.links"
+                  :key="link.name"
+                  :href="link.url"
+                  target="_blank"
+                >
+                  <div class="companyLink">{{ link.name }}</div>
+                </a>
+              </div>
+
+              <!-- 社交图标 -->
+              <div class="flex gap-3">
+                <div
+                  v-for="social in appConfig.creatiFooter.alternative.social"
+                  :key="social.name"
+                >
+                  <a :href="social.url" target="_blank">
+                    <svg class="icon" aria-hidden="true">
+                      <use :xlink:href="'#' + social.icon"></use>
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </footer>
   </div>
 </template>
@@ -207,6 +252,10 @@
 <script setup>
 const appConfig = useAppConfig();
 
+// 判断是否为 SharkFoto 网站
+const isSharkFotoSite = computed(() => {
+  return appConfig.seo?.siteName?.includes("SharkFoto") || false;
+});
 // 下拉菜单状态
 const isDropdownOpen = ref(false);
 

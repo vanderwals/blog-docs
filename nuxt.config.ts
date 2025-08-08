@@ -40,7 +40,7 @@ export default defineNuxtConfig({
     async "content:file:beforeParse"(ctx) {
       // 检查是否为 blog-config.md
       // console.log(ctx.file.id);
-      if (ctx.file && ctx.file.id && ctx.file.id.endsWith("blog-config.md")) {
+      if (ctx.file && ctx.file.id && ctx.file.id.endsWith("-blog-config.md")) {
         const mdContent = ctx.file.body;
         const match = mdContent.match(/```javascript\s*([\s\S]*?)```/);
         if (match) {
@@ -55,7 +55,7 @@ export default defineNuxtConfig({
             );
             console.log("config.json 写入成功");
           } catch (e) {
-            console.error("blog-config.md 解析失败:", e);
+            console.error(`${ctx.file.id} 解析失败:`, e);
           }
         }
         ctx.file.body = "";

@@ -10,10 +10,10 @@ export default defineAppConfig({
     },
   },
   seo: {
-    siteName: "SharkFoto",
-    url: "https://sharkfoto.com/blog",
+    siteName: "",
+    url: "",
     twitter: {
-      site: "@SharkFoto",
+      site: "",
     },
   },
   theme: {
@@ -58,5 +58,39 @@ export default defineAppConfig({
     copyright: "",
     social: [],
     columns: [],
+  },
+  creatiFooter: {
+    // 新增的脚部配置
+    alternative: {
+      copyright: "© 2025 Creati.ai. All rights reserved.",
+      links: [
+        { name: "Discovery", url: "/discovery/" },
+        { name: "Blog", url: "https://creati.ai/blog/" },
+        { name: "About Us", url: "https://creati.ai/company/" },
+        { name: "Contact Us", url: "https://creati.ai/company/contact-us/" },
+        { name: "Terms", url: "https://creati.ai/company/terms-of-service/" },
+        {
+          name: "Privacy Policy",
+          url: "https://creati.ai/company/privacy-policy/",
+        },
+      ],
+      social: [
+        {
+          name: "Facebook",
+          url: "https://www.facebook.com/creatiai",
+          icon: "icon-creatiFacebook",
+        },
+        {
+          name: "Twitter",
+          url: "https://x.com/CreatiAI",
+          icon: "icon-creatix-twitter",
+        },
+        {
+          name: "LinkedIn",
+          url: "https://www.linkedin.com/company/creatiai",
+          icon: "icon-creatilinkedin",
+        },
+      ],
+    },
   },
 });
