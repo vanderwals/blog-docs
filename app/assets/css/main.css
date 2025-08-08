@@ -277,3 +277,45 @@ html {
 .prose > * > p:first-child {
   margin-top: 0;
 }
+
+/* Creati.ai 脚部样式 */
+.footer {
+  background-color: #111827;
+  color: white;
+  padding: 0.5rem 0;
+}
+
+.footerContainer {
+  max-width: 90rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.companyLink {
+  color: #9ca3af;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  font-size: 0.875rem;
+}
+
+.companyLink:hover {
+  color: white;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  fill: #9ca3af;
+  transition: fill 0.2s ease;
+}
+
+.icon:hover {
+  fill: white;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .footerContainer {
+    padding: 0 0.5rem;
+  }
+}

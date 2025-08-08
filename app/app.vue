@@ -24,54 +24,36 @@ onMounted(async () => {
     appConfig.value = { ...defaultConfig };
     console.error("配置更新失败", e);
   }
-  console.log("seo", {
-    title: appConfig.value.homepage.hero.title,
-    description: appConfig.value.homepage.hero.subtitle,
-    ogSiteName: "SharkFoto",
-    ogType: "website",
-    ogLocale: "en_US",
-    ogImage: "https://cdn.sharkfoto.com/sharkfoto_og.png",
-    ogUrl: "https://sharkfoto.gitbook.io/blog",
-    ogTitle: appConfig.value.homepage.hero.title,
-    ogDescription: appConfig.value.homepage.hero.subtitle,
-    twitterCard: "summary_large_image",
-    twitterUrl: "https://sharkfoto.gitbook.io/blog",
-    twitterTitle: appConfig.value.homepage.hero.title,
-    twitterImage: "https://cdn.sharkfoto.com/sharkfoto_og.png",
-    twitterSite: "@SharkFoto",
-    twitterDescription: appConfig.value.homepage.hero.subtitle,
-  });
   // 只在首页设置SEO信息，避免覆盖页面级别的SEO
   if (useRoute().path === "/") {
-    const siteUrl =
-      appConfig.value.site?.url || "https://sharkfoto.gitbook.io/blog";
+    const siteUrl = appConfig.value.seo.url;
     useSeoMeta({
       title: appConfig.value.homepage.hero.title,
       description: appConfig.value.homepage.hero.subtitle,
-      ogSiteName: "SharkFoto",
+      ogSiteName: appConfig.value.seo.siteName,
       ogType: "website",
       ogLocale: "en_US",
-      ogImage: "https://cdn.sharkfoto.com/sharkfoto_og.png",
+      // ogImage: "https://cdn.sharkfoto.com/sharkfoto_og.png",
       ogUrl: siteUrl,
       ogTitle: appConfig.value.homepage.hero.title,
       ogDescription: appConfig.value.homepage.hero.subtitle,
       twitterCard: "summary_large_image",
       twitterUrl: siteUrl,
       twitterTitle: appConfig.value.homepage.hero.title,
-      twitterImage: "https://cdn.sharkfoto.com/sharkfoto_og.png",
-      twitterSite: "@SharkFoto",
+      // twitterImage: "https://cdn.sharkfoto.com/sharkfoto_og.png",
+      twitterSite: appConfig.value.seo.twitter.site,
       twitterDescription: appConfig.value.homepage.hero.subtitle,
     });
   }
 
   // 设置基础元信息
   useHead({
-    meta: [
-      {
-        property: "og:image",
-        content: "https://cdn.sharkfoto.com/sharkfoto_og.png",
-      },
-    ],
+    // meta: [
+    //   {
+    //     property: "og:image",
+    //     content: "https://cdn.sharkfoto.com/sharkfoto_og.png",
+    //   },
+    // ],
     link: [{ rel: "icon", href: appConfig.value.site.logo.src }],
     htmlAttrs: {
       lang: "en",
