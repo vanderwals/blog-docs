@@ -67,7 +67,7 @@ const formatContent = (content: string): string => {
     <!-- 搜索框 -->
     <UInput
       v-model="query"
-      placeholder="搜索文档..."
+      placeholder="Search..."
       icon="i-heroicons-magnifying-glass"
       size="md"
       class="mb-4 w-full"

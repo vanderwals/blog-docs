@@ -232,13 +232,13 @@ const scrollToActiveItem = () => {
 
           scrollableParent.scrollTo({
             top: scrollTo,
-            behavior: "smooth",
+            behavior: "auto",
           });
         }
       } else {
         // 如果没有找到滚动容器，使用默认的 scrollIntoView
         activeElement.scrollIntoView({
-          behavior: "smooth",
+          behavior: "auto",
           block: "center",
           inline: "nearest",
         });

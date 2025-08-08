@@ -41,23 +41,28 @@ onMounted(async () => {
     twitterSite: "@SharkFoto",
     twitterDescription: appConfig.value.homepage.hero.subtitle,
   });
-  useSeoMeta({
-    title: appConfig.value.homepage.hero.title,
-    description: appConfig.value.homepage.hero.subtitle,
-    ogSiteName: "SharkFoto",
-    ogType: "website",
-    ogLocale: "en_US",
-    ogImage: "https://cdn.sharkfoto.com/sharkfoto_og.png",
-    ogUrl: "https://sharkfoto.gitbook.io/blog",
-    ogTitle: appConfig.value.homepage.hero.title,
-    ogDescription: appConfig.value.homepage.hero.subtitle,
-    twitterCard: "summary_large_image",
-    twitterUrl: "https://sharkfoto.gitbook.io/blog",
-    twitterTitle: appConfig.value.homepage.hero.title,
-    twitterImage: "https://cdn.sharkfoto.com/sharkfoto_og.png",
-    twitterSite: "@SharkFoto",
-    twitterDescription: appConfig.value.homepage.hero.subtitle,
-  });
+  // 只在首页设置SEO信息，避免覆盖页面级别的SEO
+  if (useRoute().path === "/") {
+    const siteUrl =
+      appConfig.value.site?.url || "https://sharkfoto.gitbook.io/blog";
+    useSeoMeta({
+      title: appConfig.value.homepage.hero.title,
+      description: appConfig.value.homepage.hero.subtitle,
+      ogSiteName: "SharkFoto",
+      ogType: "website",
+      ogLocale: "en_US",
+      ogImage: "https://cdn.sharkfoto.com/sharkfoto_og.png",
+      ogUrl: siteUrl,
+      ogTitle: appConfig.value.homepage.hero.title,
+      ogDescription: appConfig.value.homepage.hero.subtitle,
+      twitterCard: "summary_large_image",
+      twitterUrl: siteUrl,
+      twitterTitle: appConfig.value.homepage.hero.title,
+      twitterImage: "https://cdn.sharkfoto.com/sharkfoto_og.png",
+      twitterSite: "@SharkFoto",
+      twitterDescription: appConfig.value.homepage.hero.subtitle,
+    });
+  }
 
   // 设置基础元信息
   useHead({

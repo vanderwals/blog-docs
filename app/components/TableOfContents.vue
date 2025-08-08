@@ -9,6 +9,7 @@
             class="toc-link"
             :class="{
               'toc-link-active': activeHeading === heading.id,
+              'toc-link-h1': heading.level === 1,
               'toc-link-h2': heading.level === 2,
               'toc-link-h3': heading.level === 3,
               'toc-link-h4': heading.level === 4,
@@ -29,6 +30,8 @@ const props = defineProps({
     default: () => [],
   },
 });
+const appConfig = useAppConfig();
+const theme = computed(() => appConfig.theme);
 
 const activeHeading = ref("");
 
@@ -66,19 +69,29 @@ const scrollToHeading = (id) => {
 const updateActiveHeading = () => {
   if (!process.client) return;
 
-  const headings = document.querySelectorAll("h2, h3, h4");
+  const headings = document.querySelectorAll("h1, h2, h3, h4");
   let currentActive = "";
 
-  headings.forEach((heading) => {
-    const rect = heading.getBoundingClientRect();
-    const offset = 100; // 考虑顶部导航的高度
+  // 如果页面滚动到顶部，激活页面标题
+  if (window.scrollY < 150) {
+    currentActive = "heading-0";
+  } else {
+    // 找到当前在视口顶部的标题
+    for (let i = headings.length - 1; i >= 0; i--) {
+      const heading = headings[i];
+      const rect = heading.getBoundingClientRect();
+      const offset = 120; // 考虑顶部导航的高度
 
-    if (rect.top <= offset && rect.bottom > offset) {
-      currentActive = heading.id;
+      // 如果标题的顶部在视口顶部附近，则激活它
+      if (rect.top <= offset) {
+        currentActive = heading.id;
+        break;
+      }
     }
-  });
+  }
 
   activeHeading.value = currentActive;
+  // console.log("当前激活的标题:", currentActive, "滚动位置:", window.scrollY);
 };
 
 // 组件挂载后开始监听滚动
@@ -169,14 +182,19 @@ watch(
 }
 
 .toc-link-active {
-  color: #2563eb;
-  background-color: #eff6ff;
+  color: #000000;
+  background-color: v-bind("theme.navigationActive");
   font-weight: 500;
 }
 
 .dark .toc-link-active {
-  color: #60a5fa;
-  background-color: rgba(59, 130, 246, 0.2);
+  color: white;
+  background-color: v-bind("theme.navigationActiveDark");
+}
+
+.toc-link-h1 {
+  /* font-weight: 600; */
+  font-size: 1rem;
 }
 
 .toc-link-h2 {

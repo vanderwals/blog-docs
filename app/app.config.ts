@@ -9,6 +9,13 @@ export default defineAppConfig({
       to: "",
     },
   },
+  seo: {
+    siteName: "SharkFoto",
+    url: "https://sharkfoto.com/blog",
+    twitter: {
+      site: "@SharkFoto",
+    },
+  },
   theme: {
     primary: "",
     navigationActive: "",
